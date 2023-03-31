@@ -1,4 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://bmrsg3ali8fj4"]
+[gd_scene load_steps=3 format=3 uid="uid://bmrsg3ali8fj4"]
+
+[ext_resource type="PackedScene" uid="uid://ddmy4viyon587" path="res://queen/Queen.tscn" id="1_k3lf7"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ip43q"]
 
@@ -7,3 +9,5 @@
 [node name="Ground" type="MeshInstance3D" parent="."]
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 mesh = SubResource("PlaneMesh_ip43q")
+
+[node name="Queen" parent="." instance=ExtResource("1_k3lf7")]
