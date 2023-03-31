@@ -16,4 +16,8 @@ wait_time = 1800.0
 one_shot = true
 autostart = true
 
+[node name="FoodPointsTimer" type="Timer" parent="."]
+autostart = true
+
 [connection signal="timeout" from="Lifespan" to="." method="_on_lifespan_timeout"]
+[connection signal="timeout" from="FoodPointsTimer" to="." method="_on_food_points_timer_timeout"]
