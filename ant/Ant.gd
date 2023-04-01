@@ -1,4 +1,4 @@
-class_name Queen
+class_name Ant
 extends Node3D
 
 

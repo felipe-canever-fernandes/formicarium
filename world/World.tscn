@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://bmrsg3ali8fj4"]
+[gd_scene load_steps=3 format=3 uid="uid://dtp7ckt2v1asq"]
 
-[ext_resource type="PackedScene" uid="uid://ddmy4viyon587" path="res://queen/Queen.tscn" id="1_k3lf7"]
+[ext_resource type="PackedScene" uid="uid://gof6m8iw3pph" path="res://ant/Ant.tscn" id="1_k3lf7"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_ip43q"]
 
@@ -10,7 +10,7 @@
 transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0)
 mesh = SubResource("PlaneMesh_ip43q")
 
-[node name="Queen" parent="." instance=ExtResource("1_k3lf7")]
+[node name="Ant" parent="." instance=ExtResource("1_k3lf7")]
 _food_points = 300
 
 [node name="Camera" type="Camera3D" parent="."]
