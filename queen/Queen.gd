@@ -2,7 +2,7 @@ class_name Queen
 extends Node3D
 
 
-@export var _food_points : int:
+@export var _food_points: int:
 	set(value):
 		_food_points = value
 
