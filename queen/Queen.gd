@@ -10,7 +10,7 @@ extends Node3D
 			_die()
 
 
-func _on_foodspan_timeout() -> void:
+func _on_lifespan_timeout() -> void:
 	_die()
 
 
