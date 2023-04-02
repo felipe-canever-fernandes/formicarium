@@ -45,9 +45,11 @@ func _generate_cells() -> void:
 
 func _generate_terrain() -> void:
 	var mesh_arrays := _generate_cube()
-	var array_mesh: ArrayMesh = _mesh.mesh
+
+	var array_mesh := ArrayMesh.new()
 	array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_arrays)
 
+	_mesh.mesh = array_mesh
 
 func _generate_cube() -> Array:
 	assert(_cube_size.x > 0)
