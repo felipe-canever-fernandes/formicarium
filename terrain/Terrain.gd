@@ -90,9 +90,8 @@ func _ready() -> void:
 
 
 func _generate_cells() -> void:
-	assert(_terrain_size.x > 0)
-	assert(_terrain_size.y > 0)
-	assert(_terrain_size.z > 0)
+	if _terrain_size.x <= 0 || _terrain_size.y <= 0 || _terrain_size.z <= 0:
+		return
 
 	_cells = []
 	_cells.resize(_terrain_size.x)
