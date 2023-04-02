@@ -6,6 +6,7 @@
 [node name="World" type="Node3D"]
 
 [node name="Ant" parent="." instance=ExtResource("1_k3lf7")]
+visible = false
 _food_points = 300
 
 [node name="Camera" type="Camera3D" parent="."]

@@ -1,12 +1,85 @@
 class_name Terrain
 extends Node3D
 
+const TRIANGLE_VERTEX_COUNT := 3
+const CUBE_FACE_TRIANGLE_COUNT := 2
+
+const CUBE_FACE_VERTEX_COUNT := TRIANGLE_VERTEX_COUNT * CUBE_FACE_TRIANGLE_COUNT
+
+enum CubeSide {
+	FRONT,
+	RIGHT,
+	BACK,
+	LEFT,
+	BOTTOM,
+	TOP,
+}
+
 const Cell := preload("res://terrain/Cell.gd")
 
 @export var _cube_size: Vector3
 @export var _terrain_size: Vector3i
 
 var _cells: Array[Array]
+
+var _cube_sides_vertices := [
+	PackedVector3Array([
+		Vector3(0, 0, 0),
+		Vector3(1, 0, 0),
+		Vector3(1, 1, 0),
+		Vector3(0, 1, 0),
+	]),
+
+	PackedVector3Array([
+		Vector3(1, 0, 0),
+		Vector3(1, 0, 1),
+		Vector3(1, 1, 1),
+		Vector3(1, 1, 0),
+	]),
+
+	PackedVector3Array([
+		Vector3(1, 0, 1),
+		Vector3(0, 0, 1),
+		Vector3(0, 1, 1),
+		Vector3(1, 1, 1),
+	]),
+
+	PackedVector3Array([
+		Vector3(0, 0, 1),
+		Vector3(0, 0, 0),
+		Vector3(0, 1, 0),
+		Vector3(0, 1, 1),
+	]),
+
+	PackedVector3Array([
+		Vector3(0, 0, 1),
+		Vector3(1, 0, 1),
+		Vector3(1, 0, 0),
+		Vector3(0, 0, 0),
+	]),
+
+	PackedVector3Array([
+		Vector3(0, 1, 0),
+		Vector3(1, 1, 0),
+		Vector3(1, 1, 1),
+		Vector3(0, 1, 1),
+	]),
+]
+
+var _cube_vertices_indices := [
+	0, 1, 3,
+	1, 2, 3,
+]
+
+var _cube_sides_normals := [
+	Vector3(0, 0, -1),
+	Vector3(1, 0, 0),
+	Vector3(0, 0, 1),
+	Vector3(-1, 0, 0),
+	Vector3(0, -1, 0),
+	Vector3(0, 1, 0),
+]
+
 @onready var _mesh := $Mesh
 
 
@@ -59,91 +132,47 @@ func _generate_cube(cube_position: Vector3) -> Array:
 	var mesh_arrays = []
 	mesh_arrays.resize(Mesh.ARRAY_MAX)
 
-	mesh_arrays[Mesh.ARRAY_VERTEX] = PackedVector3Array([
-		# Face 1
-		Vector3(0, 0, 0) * _cube_size + cube_position,
-		Vector3(1, 0, 0) * _cube_size + cube_position,
-		Vector3(1, 1, 0) * _cube_size + cube_position,
-		Vector3(0, 1, 0) * _cube_size + cube_position,
-		# Face 2
-		Vector3(1, 0, 0) * _cube_size + cube_position,
-		Vector3(1, 0, 1) * _cube_size + cube_position,
-		Vector3(1, 1, 1) * _cube_size + cube_position,
-		Vector3(1, 1, 0) * _cube_size + cube_position,
-		# Face 3
-		Vector3(1, 0, 1) * _cube_size + cube_position,
-		Vector3(0, 0, 1) * _cube_size + cube_position,
-		Vector3(0, 1, 1) * _cube_size + cube_position,
-		Vector3(1, 1, 1) * _cube_size + cube_position,
-		# Face 4
-		Vector3(0, 0, 1) * _cube_size + cube_position,
-		Vector3(0, 0, 0) * _cube_size + cube_position,
-		Vector3(0, 1, 0) * _cube_size + cube_position,
-		Vector3(0, 1, 1) * _cube_size + cube_position,
-		# Face 5
-		Vector3(0, 0, 1) * _cube_size + cube_position,
-		Vector3(1, 0, 1) * _cube_size + cube_position,
-		Vector3(1, 0, 0) * _cube_size + cube_position,
-		Vector3(0, 0, 0) * _cube_size + cube_position,
-		# Face 6
-		Vector3(0, 1, 0) * _cube_size + cube_position,
-		Vector3(1, 1, 0) * _cube_size + cube_position,
-		Vector3(1, 1, 1) * _cube_size + cube_position,
-		Vector3(0, 1, 1) * _cube_size + cube_position,
-	])
+	var sides: Array[CubeSide] = [
+		CubeSide.FRONT,
+		CubeSide.RIGHT,
+		CubeSide.BACK,
+		CubeSide.LEFT,
+		CubeSide.BOTTOM,
+		CubeSide.TOP,
+	]
 
-	mesh_arrays[Mesh.ARRAY_INDEX] = PackedInt32Array([
-		# Face 1
-		0, 1, 3,
-		1, 2, 3,
-		# Face 2
-		4, 5, 7,
-		5, 6, 7,
-		# Face 3
-		8, 9, 11,
-		9, 10, 11,
-		# Face 4
-		12, 13, 15,
-		13, 14, 15,
-		# Face 4
-		16, 17, 19,
-		17, 18, 19,
-		# Face 4
-		20, 21, 23,
-		21, 22, 23,
-	])
+	mesh_arrays[Mesh.ARRAY_VERTEX] = PackedVector3Array()
+	mesh_arrays[Mesh.ARRAY_NORMAL] = PackedVector3Array()
 
-	mesh_arrays[Mesh.ARRAY_NORMAL] = PackedVector3Array([
-		# Face 1
-		Vector3(0, 0, -1),
-		Vector3(0, 0, -1),
-		Vector3(0, 0, -1),
-		Vector3(0, 0, -1),
-		# Face 2
-		Vector3(1, 0, 0),
-		Vector3(1, 0, 0),
-		Vector3(1, 0, 0),
-		Vector3(1, 0, 0),
-		# Face 3
-		Vector3(0, 0, 1),
-		Vector3(0, 0, 1),
-		Vector3(0, 0, 1),
-		Vector3(0, 0, 1),
-		# Face 4
-		Vector3(-1, 0, 0),
-		Vector3(-1, 0, 0),
-		Vector3(-1, 0, 0),
-		Vector3(-1, 0, 0),
-		# Face 5
-		Vector3(0, -1, 0),
-		Vector3(0, -1, 0),
-		Vector3(0, -1, 0),
-		Vector3(0, -1, 0),
-		# Face 6
-		Vector3(0, 1, 0),
-		Vector3(0, 1, 0),
-		Vector3(0, 1, 0),
-		Vector3(0, 1, 0),
-	])
+	mesh_arrays[Mesh.ARRAY_INDEX] = PackedInt32Array()
+
+	for side_index in sides.size():
+		var side := sides[side_index]
+
+		var vertex_count: int = _cube_sides_vertices[side].size()
+
+		var vertices := PackedVector3Array()
+		vertices.resize(vertex_count)
+
+		var normals := PackedVector3Array()
+		normals.resize(vertex_count)
+
+		for vertex_index in vertex_count:
+			vertices[vertex_index] = _cube_sides_vertices[side][vertex_index]\
+					* _cube_size + cube_position
+
+			normals[vertex_index] = _cube_sides_normals[side]
+
+		mesh_arrays[Mesh.ARRAY_VERTEX].append_array(vertices)
+		mesh_arrays[Mesh.ARRAY_NORMAL].append_array(normals)
+
+		var indices := PackedInt32Array()
+		indices.resize(CUBE_FACE_VERTEX_COUNT)
+
+		for index_index in _cube_vertices_indices.size():
+			indices[index_index] = _cube_vertices_indices[index_index]\
+					+ side_index * vertex_count
+
+		mesh_arrays[Mesh.ARRAY_INDEX].append_array(indices)
 
 	return mesh_arrays
