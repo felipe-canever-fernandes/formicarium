@@ -1,22 +1,33 @@
-[gd_scene load_steps=3 format=3 uid="uid://dtp7ckt2v1asq"]
+[gd_scene load_steps=4 format=3 uid="uid://dtp7ckt2v1asq"]
 
 [ext_resource type="PackedScene" uid="uid://gof6m8iw3pph" path="res://ant/Ant.tscn" id="1_k3lf7"]
 [ext_resource type="PackedScene" uid="uid://din64inby56sp" path="res://terrain/Terrain.tscn" id="2_0hp8a"]
 
+[sub_resource type="Environment" id="Environment_n4w7s"]
+ambient_light_source = 2
+ambient_light_color = Color(0.690196, 0.690196, 0.690196, 1)
+
 [node name="World" type="Node3D"]
 
-[node name="Ant" parent="." instance=ExtResource("1_k3lf7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 6, 1)
-_food_points = 300
-
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(-0.707107, 0.353553, -0.612372, 0, 0.866025, 0.5, 0.707107, 0.353553, -0.612372, -10, 25, -10)
+transform = Transform3D(-0.707107, 0.353553, -0.612373, 0, 0.866026, 0.5, 0.707107, 0.353553, -0.612373, -10, 30, -10)
 projection = 1
-size = 20.0
+size = 30.0
+far = 300.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_n4w7s")
 
 [node name="Sun" type="DirectionalLight3D" parent="."]
-transform = Transform3D(4.37114e-08, 0.5, -0.866025, 1.51421e-07, 0.866025, 0.5, 1, -1.5299e-07, -3.78552e-08, 0, 0, 0)
-metadata/_edit_lock_ = true
+transform = Transform3D(-0.5109, -0.725508, 0.461107, -0.26833, 0.644185, 0.716257, -0.816688, 0.242207, -0.52379, 0, 0, 0)
+light_energy = 2.0
+shadow_enabled = true
+shadow_opacity = 0.9
+
+[node name="Ant" parent="." instance=ExtResource("1_k3lf7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 9, 8)
+_food_points = 300
 
 [node name="Terrain" parent="." instance=ExtResource("2_0hp8a")]
-_terrain_size = Vector3i(30, 50, 30)
+_cube_size = Vector3(1, 1, 1)
+_terrain_size = Vector3i(50, 50, 50)
