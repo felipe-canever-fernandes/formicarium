@@ -1,3 +1,4 @@
+@tool
 class_name Terrain
 extends Node3D
 
@@ -107,7 +108,7 @@ func _generate_cells() -> void:
 			for z in _cells[x][y].size():
 				var cell_type: Cell.CellType
 
-				if y <= 5:
+				if y <= 2 * sin(0.25 * x) + 2 * sin(0.1 * z) + 5:
 					cell_type = Cell.CellType.DIRT
 				else:
 					cell_type = Cell.CellType.AIR
@@ -123,16 +124,25 @@ func _generate_terrain() -> void:
 	mesh_arrays[Mesh.ARRAY_NORMAL] = PackedVector3Array()
 	mesh_arrays[Mesh.ARRAY_INDEX] = PackedInt32Array()
 
-	_generate_cube(mesh_arrays, Vector3(0, 0, 0))
-	_generate_cube(mesh_arrays, Vector3(2, 0, 0))
-	_generate_cube(mesh_arrays, Vector3(0, 0, 2))
-	_generate_cube(mesh_arrays, Vector3(2, 0, 2))
-	_generate_cube(mesh_arrays, Vector3(1, 0, 1))
+	_generate_cubes(mesh_arrays)
 
 	var array_mesh := ArrayMesh.new()
 	array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_arrays)
 
 	_mesh.mesh = array_mesh
+
+
+func _generate_cubes(mesh_arrays: Array):
+	for x in _cells.size():
+		for y in _cells[x].size():
+			for z in _cells[x][y].size():
+				var cell: Cell.Cell = _cells[x][y][z]
+
+				if cell.type == Cell.CellType.AIR:
+					continue
+
+				var position := Vector3(x, y, z) * _cube_size
+				_generate_cube(mesh_arrays, position)
 
 
 func _generate_cube(mesh_arrays: Array, cube_position: Vector3):
