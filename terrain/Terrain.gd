@@ -3,7 +3,10 @@ class_name Terrain
 extends Node3D
 
 const Cell := preload("res://terrain/Cell.gd")
-@export var size: Vector3i
+
+@export var _cube_size: Vector3
+@export var _terrain_size: Vector3i
+
 var _cells: Array[Array]
 @onready var _mesh := $Mesh
 
@@ -14,16 +17,20 @@ func _ready() -> void:
 
 
 func _generate_cells() -> void:
+	assert(_terrain_size.x > 0)
+	assert(_terrain_size.y > 0)
+	assert(_terrain_size.z > 0)
+
 	_cells = []
-	_cells.resize(size.x)
+	_cells.resize(_terrain_size.x)
 
 	for x in _cells.size():
 		_cells[x] = []
-		_cells[x].resize(size.y)
+		_cells[x].resize(_terrain_size.y)
 
 		for y in _cells[x].size():
 			_cells[x][y] = []
-			_cells[x][y].resize(size.z)
+			_cells[x][y].resize(_terrain_size.z)
 
 			for z in _cells[x][y].size():
 				var cell_type: Cell.CellType
@@ -43,40 +50,44 @@ func _generate_terrain() -> void:
 
 
 func _generate_cube() -> Array:
+	assert(_cube_size.x > 0)
+	assert(_cube_size.y > 0)
+	assert(_cube_size.z > 0)
+
 	var mesh_arrays = []
 	mesh_arrays.resize(Mesh.ARRAY_MAX)
 
 	mesh_arrays[Mesh.ARRAY_VERTEX] = PackedVector3Array([
 		# Face 1
-		Vector3(0, 0, 0),
-		Vector3(1, 0, 0),
-		Vector3(1, 1, 0),
-		Vector3(0, 1, 0),
+		Vector3(0, 0, 0) * _cube_size,
+		Vector3(1, 0, 0) * _cube_size,
+		Vector3(1, 1, 0) * _cube_size,
+		Vector3(0, 1, 0) * _cube_size,
 		# Face 2
-		Vector3(1, 0, 0),
-		Vector3(1, 0, 1),
-		Vector3(1, 1, 1),
-		Vector3(1, 1, 0),
+		Vector3(1, 0, 0) * _cube_size,
+		Vector3(1, 0, 1) * _cube_size,
+		Vector3(1, 1, 1) * _cube_size,
+		Vector3(1, 1, 0) * _cube_size,
 		# Face 3
-		Vector3(1, 0, 1),
-		Vector3(0, 0, 1),
-		Vector3(0, 1, 1),
-		Vector3(1, 1, 1),
+		Vector3(1, 0, 1) * _cube_size,
+		Vector3(0, 0, 1) * _cube_size,
+		Vector3(0, 1, 1) * _cube_size,
+		Vector3(1, 1, 1) * _cube_size,
 		# Face 4
-		Vector3(0, 0, 1),
-		Vector3(0, 0, 0),
-		Vector3(0, 1, 0),
-		Vector3(0, 1, 1),
+		Vector3(0, 0, 1) * _cube_size,
+		Vector3(0, 0, 0) * _cube_size,
+		Vector3(0, 1, 0) * _cube_size,
+		Vector3(0, 1, 1) * _cube_size,
 		# Face 5
-		Vector3(0, 0, 1),
-		Vector3(1, 0, 1),
-		Vector3(1, 0, 0),
-		Vector3(0, 0, 0),
+		Vector3(0, 0, 1) * _cube_size,
+		Vector3(1, 0, 1) * _cube_size,
+		Vector3(1, 0, 0) * _cube_size,
+		Vector3(0, 0, 0) * _cube_size,
 		# Face 6
-		Vector3(0, 1, 0),
-		Vector3(1, 1, 0),
-		Vector3(1, 1, 1),
-		Vector3(0, 1, 1),
+		Vector3(0, 1, 0) * _cube_size,
+		Vector3(1, 1, 0) * _cube_size,
+		Vector3(1, 1, 1) * _cube_size,
+		Vector3(0, 1, 1) * _cube_size,
 	])
 
 	mesh_arrays[Mesh.ARRAY_INDEX] = PackedInt32Array([
