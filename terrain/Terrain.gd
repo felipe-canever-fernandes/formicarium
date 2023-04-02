@@ -123,7 +123,11 @@ func _generate_terrain() -> void:
 	mesh_arrays[Mesh.ARRAY_NORMAL] = PackedVector3Array()
 	mesh_arrays[Mesh.ARRAY_INDEX] = PackedInt32Array()
 
-	_generate_cube(mesh_arrays, Vector3.ZERO)
+	_generate_cube(mesh_arrays, Vector3(0, 0, 0))
+	_generate_cube(mesh_arrays, Vector3(2, 0, 0))
+	_generate_cube(mesh_arrays, Vector3(0, 0, 2))
+	_generate_cube(mesh_arrays, Vector3(2, 0, 2))
+	_generate_cube(mesh_arrays, Vector3(1, 0, 1))
 
 	var array_mesh := ArrayMesh.new()
 	array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_arrays)
@@ -144,6 +148,8 @@ func _generate_cube(mesh_arrays: Array, cube_position: Vector3):
 		CubeSide.BOTTOM,
 		CubeSide.TOP,
 	]
+
+	var total_vertex_count: int = mesh_arrays[Mesh.ARRAY_VERTEX].size()
 
 	for side_index in sides.size():
 		var side := sides[side_index]
@@ -170,6 +176,6 @@ func _generate_cube(mesh_arrays: Array, cube_position: Vector3):
 
 		for index_index in _cube_vertices_indices.size():
 			indices[index_index] = _cube_vertices_indices[index_index]\
-					+ side_index * vertex_count
+					+ side_index * vertex_count + total_vertex_count
 
 		mesh_arrays[Mesh.ARRAY_INDEX].append_array(indices)
