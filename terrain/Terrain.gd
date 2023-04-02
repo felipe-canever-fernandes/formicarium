@@ -116,7 +116,14 @@ func _generate_cells() -> void:
 
 
 func _generate_terrain() -> void:
-	var mesh_arrays := _generate_cube(Vector3.ZERO)
+	var mesh_arrays := []
+	mesh_arrays.resize(Mesh.ARRAY_MAX)
+
+	mesh_arrays[Mesh.ARRAY_VERTEX] = PackedVector3Array()
+	mesh_arrays[Mesh.ARRAY_NORMAL] = PackedVector3Array()
+	mesh_arrays[Mesh.ARRAY_INDEX] = PackedInt32Array()
+
+	_generate_cube(mesh_arrays, Vector3.ZERO)
 
 	var array_mesh := ArrayMesh.new()
 	array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, mesh_arrays)
@@ -124,13 +131,10 @@ func _generate_terrain() -> void:
 	_mesh.mesh = array_mesh
 
 
-func _generate_cube(cube_position: Vector3) -> Array:
+func _generate_cube(mesh_arrays: Array, cube_position: Vector3):
 	assert(_cube_size.x > 0)
 	assert(_cube_size.y > 0)
 	assert(_cube_size.z > 0)
-
-	var mesh_arrays = []
-	mesh_arrays.resize(Mesh.ARRAY_MAX)
 
 	var sides: Array[CubeSide] = [
 		CubeSide.FRONT,
@@ -140,11 +144,6 @@ func _generate_cube(cube_position: Vector3) -> Array:
 		CubeSide.BOTTOM,
 		CubeSide.TOP,
 	]
-
-	mesh_arrays[Mesh.ARRAY_VERTEX] = PackedVector3Array()
-	mesh_arrays[Mesh.ARRAY_NORMAL] = PackedVector3Array()
-
-	mesh_arrays[Mesh.ARRAY_INDEX] = PackedInt32Array()
 
 	for side_index in sides.size():
 		var side := sides[side_index]
@@ -174,5 +173,3 @@ func _generate_cube(cube_position: Vector3) -> Array:
 					+ side_index * vertex_count
 
 		mesh_arrays[Mesh.ARRAY_INDEX].append_array(indices)
-
-	return mesh_arrays
