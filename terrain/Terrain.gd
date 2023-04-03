@@ -140,23 +140,49 @@ func _generate_cubes(mesh_arrays: Array):
 				if cell.type == Cell.CellType.AIR:
 					continue
 
-				var position := Vector3(x, y, z) * _cube_size
-				_generate_cube(mesh_arrays, position)
+				var cube_position := Vector3(x, y, z) * _cube_size
+				var sides := _get_cube_visible_sides(x, y, z)
+				_generate_cube(mesh_arrays, cube_position, sides)
 
 
-func _generate_cube(mesh_arrays: Array, cube_position: Vector3):
+func _get_cube_visible_sides(x: int, y: int, z: int) -> Array[CubeSide]:
+	var sides: Array[CubeSide] = []
+
+	if x - 1 >= 0:
+		if _cells[x - 1][y][z].type == Cell.CellType.AIR:
+			sides.append(CubeSide.LEFT)
+
+	if x + 1 < _terrain_size.x:
+		if _cells[x + 1][y][z].type == Cell.CellType.AIR:
+			sides.append(CubeSide.RIGHT)
+
+	if y - 1 >= 0:
+		if _cells[x][y - 1][z].type == Cell.CellType.AIR:
+			sides.append(CubeSide.BOTTOM)
+
+	if y + 1 < _terrain_size.y:
+		if _cells[x][y + 1][z].type == Cell.CellType.AIR:
+			sides.append(CubeSide.TOP)
+
+	if z - 1 >= 0:
+		if _cells[x][y][z - 1].type == Cell.CellType.AIR:
+			sides.append(CubeSide.FRONT)
+
+	if z + 1 < _terrain_size.z:
+		if _cells[x][y][z + 1].type == Cell.CellType.AIR:
+			sides.append(CubeSide.BACK)
+
+	return sides
+
+
+func _generate_cube(
+	mesh_arrays: Array,
+	cube_position: Vector3,
+	sides: Array[CubeSide],
+):
 	assert(_cube_size.x > 0)
 	assert(_cube_size.y > 0)
 	assert(_cube_size.z > 0)
-
-	var sides: Array[CubeSide] = [
-		CubeSide.FRONT,
-		CubeSide.RIGHT,
-		CubeSide.BACK,
-		CubeSide.LEFT,
-		CubeSide.BOTTOM,
-		CubeSide.TOP,
-	]
 
 	var total_vertex_count: int = mesh_arrays[Mesh.ARRAY_VERTEX].size()
 
