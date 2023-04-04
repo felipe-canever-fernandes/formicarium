@@ -1,5 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://dtp7ckt2v1asq"]
+[gd_scene load_steps=5 format=3 uid="uid://dtp7ckt2v1asq"]
 
+[ext_resource type="Script" path="res://world/Camera.gd" id="1_1y2y1"]
 [ext_resource type="PackedScene" uid="uid://gof6m8iw3pph" path="res://ant/Ant.tscn" id="1_k3lf7"]
 [ext_resource type="PackedScene" uid="uid://din64inby56sp" path="res://terrain/Terrain.tscn" id="2_0hp8a"]
 
@@ -11,7 +12,11 @@ ambient_light_color = Color(0.690196, 0.690196, 0.690196, 1)
 
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(-0.707107, 0.5, -0.5, -2.98023e-08, 0.707107, 0.707107, 0.707107, 0.5, -0.5, 3, 17, 3)
+current = true
 size = 30.0
+script = ExtResource("1_1y2y1")
+_movement_speed = 10.0
+_rotation_speed = 45.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_n4w7s")
