@@ -1,4 +1,3 @@
-@tool
 class_name Terrain
 extends Node3D
 
