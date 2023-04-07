@@ -20,7 +20,7 @@ const Block := preload("res://terrain/Block.gd")
 @export var _cube_size: Vector3
 @export var _terrain_size: Vector3i
 
-var _cells: Array[Array]
+var _blocks: Array[Array]
 
 var _cube_sides_vertices := [
 	PackedVector3Array([
@@ -84,39 +84,46 @@ var _cube_sides_normals := [
 
 
 func _ready() -> void:
-	_generate_cells()
+	_generate_blocks()
 	_generate_terrain()
 
 
-func _generate_cells() -> void:
+func _generate_blocks() -> void:
 	if _terrain_size.x <= 0 || _terrain_size.y <= 0 || _terrain_size.z <= 0:
 		return
 
-	_cells = []
-	_cells.resize(_terrain_size.x)
+	_blocks = []
+	_blocks.resize(_terrain_size.x)
 
-	for x in _cells.size():
-		_cells[x] = []
-		_cells[x].resize(_terrain_size.y)
+	for x in _blocks.size():
+		_blocks[x] = []
+		_blocks[x].resize(_terrain_size.y)
 
-		for y in _cells[x].size():
-			_cells[x][y] = []
-			_cells[x][y].resize(_terrain_size.z)
+		for y in _blocks[x].size():
+			_blocks[x][y] = []
+			_blocks[x][y].resize(_terrain_size.z)
 
-			for z in _cells[x][y].size():
-				var cell_type: Block.Type
+			for z in _blocks[x][y].size():
+				var block_type: Block.Type
 
 				if y <= 2 * sin(0.25 * x) + 2 * sin(0.1 * z) + 35:
-					cell_type = Block.Type.DIRT
+					block_type = Block.Type.DIRT
 				else:
-					cell_type = Block.Type.AIR
+					block_type = Block.Type.AIR
 
-				_cells[x][y][z] = Block.Block.new(cell_type)
+				_blocks[x][y][z] = Block.Block.new(block_type)
 
 
 func _generate_terrain() -> void:
+	var time_before := Time.get_ticks_msec()
+
 	_generate_mesh()
 	_generate_collision()
+
+	var time_after := Time.get_ticks_msec()
+
+	var duration := time_after - time_before
+	print(duration)
 
 
 func _generate_mesh() -> void:
@@ -136,12 +143,12 @@ func _generate_mesh() -> void:
 
 
 func _generate_cubes(mesh_arrays: Array):
-	for x in _cells.size():
-		for y in _cells[x].size():
-			for z in _cells[x][y].size():
-				var cell: Block.Block = _cells[x][y][z]
+	for x in _blocks.size():
+		for y in _blocks[x].size():
+			for z in _blocks[x][y].size():
+				var block: Block.Block = _blocks[x][y][z]
 
-				if cell.type == Block.Type.AIR:
+				if block.type == Block.Type.AIR:
 					continue
 
 				var cube_position := Vector3(x, y, z) * _cube_size
@@ -153,27 +160,27 @@ func _get_cube_visible_sides(x: int, y: int, z: int) -> Array[CubeSide]:
 	var sides: Array[CubeSide] = []
 
 	if x - 1 >= 0:
-		if _cells[x - 1][y][z].type == Block.Type.AIR:
+		if _blocks[x - 1][y][z].type == Block.Type.AIR:
 			sides.append(CubeSide.LEFT)
 
 	if x + 1 < _terrain_size.x:
-		if _cells[x + 1][y][z].type == Block.Type.AIR:
+		if _blocks[x + 1][y][z].type == Block.Type.AIR:
 			sides.append(CubeSide.RIGHT)
 
 	if y - 1 >= 0:
-		if _cells[x][y - 1][z].type == Block.Type.AIR:
+		if _blocks[x][y - 1][z].type == Block.Type.AIR:
 			sides.append(CubeSide.BOTTOM)
 
 	if y + 1 < _terrain_size.y:
-		if _cells[x][y + 1][z].type == Block.Type.AIR:
+		if _blocks[x][y + 1][z].type == Block.Type.AIR:
 			sides.append(CubeSide.TOP)
 
 	if z - 1 >= 0:
-		if _cells[x][y][z - 1].type == Block.Type.AIR:
+		if _blocks[x][y][z - 1].type == Block.Type.AIR:
 			sides.append(CubeSide.FRONT)
 
 	if z + 1 < _terrain_size.z:
-		if _cells[x][y][z + 1].type == Block.Type.AIR:
+		if _blocks[x][y][z + 1].type == Block.Type.AIR:
 			sides.append(CubeSide.BACK)
 
 	return sides
@@ -229,36 +236,36 @@ func _generate_collision() -> void:
 
 
 func remove_block(world_position: Vector3, normal: Vector3) -> void:
-	var cell_position := _from_cube_position_to_cell_position(
+	var block_position := _from_cube_position_to_block_position(
 		world_position,
 		normal,
 	)
 
-	_cells[cell_position.x][cell_position.y][cell_position.z].type = \
+	_blocks[block_position.x][block_position.y][block_position.z].type = \
 			Block.Type.AIR
 
 	_generate_terrain()
 
 
-func _from_cube_position_to_cell_position(
+func _from_cube_position_to_block_position(
 	cube_position: Vector3,
 	normal: Vector3,
 ) -> Vector3i:
-	var cell_position := _from_world_position_to_cell_position(cube_position)
+	var block_position := _from_world_position_to_block_position(cube_position)
 
 	if normal.x > 0:
-		cell_position.x -= 1
+		block_position.x -= 1
 
 	if normal.y > 0:
-		cell_position.y -= 1
+		block_position.y -= 1
 
 	if normal.z > 0:
-		cell_position.z -= 1
+		block_position.z -= 1
 
-	return cell_position
+	return block_position
 
 
-func _from_world_position_to_cell_position(world_position: Vector3) -> Vector3i:
+func _from_world_position_to_block_position(world_position: Vector3) -> Vector3i:
 	return Vector3i(
 		int(world_position.x / _cube_size.x),
 		int(world_position.y / _cube_size.y),
@@ -266,7 +273,7 @@ func _from_world_position_to_cell_position(world_position: Vector3) -> Vector3i:
 	)
 
 
-func _is_cell_position_inside_terrain(cell_position: Vector3i) -> bool:
-	return cell_position.x >= 0 and cell_position.x < _terrain_size.x and \
-			cell_position.y >= 0 and cell_position.y < _terrain_size.y and \
-			cell_position.z >= 0 and cell_position.z < _terrain_size.z
+func _is_block_position_inside_terrain(block_position: Vector3i) -> bool:
+	return block_position.x >= 0 and block_position.x < _terrain_size.x and \
+			block_position.y >= 0 and block_position.y < _terrain_size.y and \
+			block_position.z >= 0 and block_position.z < _terrain_size.z
