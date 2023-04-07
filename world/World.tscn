@@ -36,8 +36,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 39, 8)
 _food_points = 300
 
 [node name="Chunk" parent="." instance=ExtResource("2_0hp8a")]
+_size = Vector3i(50, 50, 50)
 _cube_size = Vector3(1, 1, 1)
-_chunk_size = Vector3i(50, 50, 50)
 
 [node name="FPS" type="Label" parent="."]
 offset_right = 40.0

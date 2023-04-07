@@ -19,8 +19,8 @@ const Block := preload("res://terrain/Block.gd")
 
 const _CUBE_SIDE_VERTEX_COUNT: int = 4
 
+@export var _size: Vector3i
 @export var _cube_size: Vector3
-@export var _chunk_size: Vector3i
 
 var _blocks: Array[Array]
 
@@ -93,19 +93,19 @@ func _ready() -> void:
 
 
 func _generate_blocks() -> void:
-	if _chunk_size.x <= 0 || _chunk_size.y <= 0 || _chunk_size.z <= 0:
+	if _size.x <= 0 || _size.y <= 0 || _size.z <= 0:
 		return
 
 	_blocks = []
-	_blocks.resize(_chunk_size.x)
+	_blocks.resize(_size.x)
 
 	for x in _blocks.size():
 		_blocks[x] = []
-		_blocks[x].resize(_chunk_size.y)
+		_blocks[x].resize(_size.y)
 
 		for y in _blocks[x].size():
 			_blocks[x][y] = []
-			_blocks[x][y].resize(_chunk_size.z)
+			_blocks[x][y].resize(_size.z)
 
 			for z in _blocks[x][y].size():
 				var block_type: Block.Type
@@ -161,7 +161,7 @@ func _get_cube_visible_sides(x: int, y: int, z: int) -> Array[CubeSide]:
 		if _blocks[x - 1][y][z].type == Block.Type.AIR:
 			sides.append(CubeSide.LEFT)
 
-	if x + 1 < _chunk_size.x:
+	if x + 1 < _size.x:
 		if _blocks[x + 1][y][z].type == Block.Type.AIR:
 			sides.append(CubeSide.RIGHT)
 
@@ -169,7 +169,7 @@ func _get_cube_visible_sides(x: int, y: int, z: int) -> Array[CubeSide]:
 		if _blocks[x][y - 1][z].type == Block.Type.AIR:
 			sides.append(CubeSide.BOTTOM)
 
-	if y + 1 < _chunk_size.y:
+	if y + 1 < _size.y:
 		if _blocks[x][y + 1][z].type == Block.Type.AIR:
 			sides.append(CubeSide.TOP)
 
@@ -177,7 +177,7 @@ func _get_cube_visible_sides(x: int, y: int, z: int) -> Array[CubeSide]:
 		if _blocks[x][y][z - 1].type == Block.Type.AIR:
 			sides.append(CubeSide.FRONT)
 
-	if z + 1 < _chunk_size.z:
+	if z + 1 < _size.z:
 		if _blocks[x][y][z + 1].type == Block.Type.AIR:
 			sides.append(CubeSide.BACK)
 
@@ -269,6 +269,6 @@ func _from_world_position_to_block_position(world_position: Vector3) -> Vector3i
 
 
 func _is_block_position_inside_chunk(block_position: Vector3i) -> bool:
-	return block_position.x >= 0 and block_position.x < _chunk_size.x and \
-			block_position.y >= 0 and block_position.y < _chunk_size.y and \
-			block_position.z >= 0 and block_position.z < _chunk_size.z
+	return block_position.x >= 0 and block_position.x < _size.x and \
+			block_position.y >= 0 and block_position.y < _size.y and \
+			block_position.z >= 0 and block_position.z < _size.z
