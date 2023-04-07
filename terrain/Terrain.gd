@@ -15,7 +15,7 @@ enum CubeSide {
 	TOP,
 }
 
-const Cell := preload("res://terrain/Cell.gd")
+const Block := preload("res://terrain/Block.gd")
 
 @export var _cube_size: Vector3
 @export var _terrain_size: Vector3i
@@ -104,14 +104,14 @@ func _generate_cells() -> void:
 			_cells[x][y].resize(_terrain_size.z)
 
 			for z in _cells[x][y].size():
-				var cell_type: Cell.CellType
+				var cell_type: Block.Type
 
 				if y <= 2 * sin(0.25 * x) + 2 * sin(0.1 * z) + 35:
-					cell_type = Cell.CellType.DIRT
+					cell_type = Block.Type.DIRT
 				else:
-					cell_type = Cell.CellType.AIR
+					cell_type = Block.Type.AIR
 
-				_cells[x][y][z] = Cell.Cell.new(cell_type)
+				_cells[x][y][z] = Block.Block.new(cell_type)
 
 
 func _generate_terrain() -> void:
@@ -139,9 +139,9 @@ func _generate_cubes(mesh_arrays: Array):
 	for x in _cells.size():
 		for y in _cells[x].size():
 			for z in _cells[x][y].size():
-				var cell: Cell.Cell = _cells[x][y][z]
+				var cell: Block.Block = _cells[x][y][z]
 
-				if cell.type == Cell.CellType.AIR:
+				if cell.type == Block.Type.AIR:
 					continue
 
 				var cube_position := Vector3(x, y, z) * _cube_size
@@ -153,27 +153,27 @@ func _get_cube_visible_sides(x: int, y: int, z: int) -> Array[CubeSide]:
 	var sides: Array[CubeSide] = []
 
 	if x - 1 >= 0:
-		if _cells[x - 1][y][z].type == Cell.CellType.AIR:
+		if _cells[x - 1][y][z].type == Block.Type.AIR:
 			sides.append(CubeSide.LEFT)
 
 	if x + 1 < _terrain_size.x:
-		if _cells[x + 1][y][z].type == Cell.CellType.AIR:
+		if _cells[x + 1][y][z].type == Block.Type.AIR:
 			sides.append(CubeSide.RIGHT)
 
 	if y - 1 >= 0:
-		if _cells[x][y - 1][z].type == Cell.CellType.AIR:
+		if _cells[x][y - 1][z].type == Block.Type.AIR:
 			sides.append(CubeSide.BOTTOM)
 
 	if y + 1 < _terrain_size.y:
-		if _cells[x][y + 1][z].type == Cell.CellType.AIR:
+		if _cells[x][y + 1][z].type == Block.Type.AIR:
 			sides.append(CubeSide.TOP)
 
 	if z - 1 >= 0:
-		if _cells[x][y][z - 1].type == Cell.CellType.AIR:
+		if _cells[x][y][z - 1].type == Block.Type.AIR:
 			sides.append(CubeSide.FRONT)
 
 	if z + 1 < _terrain_size.z:
-		if _cells[x][y][z + 1].type == Cell.CellType.AIR:
+		if _cells[x][y][z + 1].type == Block.Type.AIR:
 			sides.append(CubeSide.BACK)
 
 	return sides
@@ -235,7 +235,7 @@ func remove_block(world_position: Vector3, normal: Vector3) -> void:
 	)
 
 	_cells[cell_position.x][cell_position.y][cell_position.z].type = \
-			Cell.CellType.AIR
+			Block.Type.AIR
 
 	_generate_terrain()
 
