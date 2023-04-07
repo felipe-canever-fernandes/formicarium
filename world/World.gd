@@ -2,8 +2,13 @@ extends Node3D
 
 const _RAY_LENGTH: int = 4000
 
+@onready var _fps := $FPS as Label
 @onready var _camera := $Camera as Camera3D
 @onready var _terrain := $Terrain as Terrain
+
+
+func _process(_delta: float) -> void:
+	_fps.text = str(Engine.get_frames_per_second())
 
 
 func _physics_process(_delta: float) -> void:

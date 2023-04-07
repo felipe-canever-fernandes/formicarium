@@ -38,3 +38,8 @@ _food_points = 300
 [node name="Terrain" parent="." instance=ExtResource("2_0hp8a")]
 _cube_size = Vector3(1, 1, 1)
 _terrain_size = Vector3i(50, 50, 50)
+
+[node name="FPS" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "FPS"
