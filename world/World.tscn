@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://world/Camera.gd" id="1_1y2y1"]
 [ext_resource type="Script" path="res://world/World.gd" id="1_ibgjs"]
 [ext_resource type="PackedScene" uid="uid://gof6m8iw3pph" path="res://ant/Ant.tscn" id="1_k3lf7"]
-[ext_resource type="PackedScene" uid="uid://din64inby56sp" path="res://terrain/Terrain.tscn" id="2_0hp8a"]
+[ext_resource type="PackedScene" uid="uid://din64inby56sp" path="res://terrain/chunk/Chunk.tscn" id="2_0hp8a"]
 
 [sub_resource type="Environment" id="Environment_n4w7s"]
 ambient_light_source = 2
@@ -35,9 +35,9 @@ shadow_opacity = 0.9
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 39, 8)
 _food_points = 300
 
-[node name="Terrain" parent="." instance=ExtResource("2_0hp8a")]
+[node name="Chunk" parent="." instance=ExtResource("2_0hp8a")]
 _cube_size = Vector3(1, 1, 1)
-_terrain_size = Vector3i(50, 50, 50)
+_chunk_size = Vector3i(50, 50, 50)
 
 [node name="FPS" type="Label" parent="."]
 offset_right = 40.0
