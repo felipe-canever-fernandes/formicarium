@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://dtp7ckt2v1asq"]
+[gd_scene load_steps=6 format=3 uid="uid://dtp7ckt2v1asq"]
 
 [ext_resource type="Script" path="res://world/Camera.gd" id="1_1y2y1"]
+[ext_resource type="Script" path="res://world/World.gd" id="1_ibgjs"]
 [ext_resource type="PackedScene" uid="uid://gof6m8iw3pph" path="res://ant/Ant.tscn" id="1_k3lf7"]
 [ext_resource type="PackedScene" uid="uid://din64inby56sp" path="res://terrain/Terrain.tscn" id="2_0hp8a"]
 
@@ -9,9 +10,10 @@ ambient_light_source = 2
 ambient_light_color = Color(0.690196, 0.690196, 0.690196, 1)
 
 [node name="World" type="Node3D"]
+script = ExtResource("1_ibgjs")
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(-0.707107, 0.5, -0.5, -2.98023e-08, 0.707107, 0.707107, 0.707107, 0.5, -0.5, 3, 17, 3)
+transform = Transform3D(-0.707107, 0.5, -0.5, -2.98023e-08, 0.707107, 0.707107, 0.707107, 0.5, -0.5, 3, 44, 3)
 current = true
 size = 30.0
 script = ExtResource("1_1y2y1")
@@ -28,7 +30,7 @@ shadow_enabled = true
 shadow_opacity = 0.9
 
 [node name="Ant" parent="." instance=ExtResource("1_k3lf7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 9, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 39, 8)
 _food_points = 300
 
 [node name="Terrain" parent="." instance=ExtResource("2_0hp8a")]

@@ -80,7 +80,7 @@ var _cube_sides_normals := [
 	Vector3(0, 1, 0),
 ]
 
-@onready var _mesh := $Mesh
+@onready var _mesh := $Mesh as MeshInstance3D
 
 
 func _ready() -> void:
@@ -106,7 +106,7 @@ func _generate_cells() -> void:
 			for z in _cells[x][y].size():
 				var cell_type: Cell.CellType
 
-				if y <= 2 * sin(0.25 * x) + 2 * sin(0.1 * z) + 5:
+				if y <= 2 * sin(0.25 * x) + 2 * sin(0.1 * z) + 35:
 					cell_type = Cell.CellType.DIRT
 				else:
 					cell_type = Cell.CellType.AIR
@@ -115,6 +115,11 @@ func _generate_cells() -> void:
 
 
 func _generate_terrain() -> void:
+	_generate_mesh()
+	_generate_collision()
+
+
+func _generate_mesh() -> void:
 	var mesh_arrays := []
 	mesh_arrays.resize(Mesh.ARRAY_MAX)
 
@@ -213,3 +218,55 @@ func _generate_cube(
 					+ side_index * vertex_count + total_vertex_count
 
 		mesh_arrays[Mesh.ARRAY_INDEX].append_array(indices)
+
+
+func _generate_collision() -> void:
+	if _mesh.get_child_count() >= 1:
+		var collision := _mesh.get_child(0)
+		collision.queue_free()
+
+	_mesh.create_trimesh_collision()
+
+
+func remove_block(world_position: Vector3, normal: Vector3) -> void:
+	var cell_position := _from_cube_position_to_cell_position(
+		world_position,
+		normal,
+	)
+
+	_cells[cell_position.x][cell_position.y][cell_position.z].type = \
+			Cell.CellType.AIR
+
+	_generate_terrain()
+
+
+func _from_cube_position_to_cell_position(
+	cube_position: Vector3,
+	normal: Vector3,
+) -> Vector3i:
+	var cell_position := _from_world_position_to_cell_position(cube_position)
+
+	if normal.x > 0:
+		cell_position.x -= 1
+
+	if normal.y > 0:
+		cell_position.y -= 1
+
+	if normal.z > 0:
+		cell_position.z -= 1
+
+	return cell_position
+
+
+func _from_world_position_to_cell_position(world_position: Vector3) -> Vector3i:
+	return Vector3i(
+		int(world_position.x / _cube_size.x),
+		int(world_position.y / _cube_size.y),
+		int(world_position.z / _cube_size.z),
+	)
+
+
+func _is_cell_position_inside_terrain(cell_position: Vector3i) -> bool:
+	return cell_position.x >= 0 and cell_position.x < _terrain_size.x and \
+			cell_position.y >= 0 and cell_position.y < _terrain_size.y and \
+			cell_position.z >= 0 and cell_position.z < _terrain_size.z
