@@ -1,5 +1,5 @@
 class_name Chunk
-extends Node3D
+extends MeshInstance3D
 
 const TRIANGLE_VERTEX_COUNT := 3
 const CUBE_FACE_TRIANGLE_COUNT := 2
@@ -84,8 +84,6 @@ var _cube_sides_normals := [
 
 var _mesh_arrays: Array
 
-@onready var _mesh := $Mesh as MeshInstance3D
-
 
 func _ready() -> void:
 	_mesh_arrays.resize(Mesh.ARRAY_MAX)
@@ -135,7 +133,7 @@ func _generate_mesh() -> void:
 	var array_mesh := ArrayMesh.new()
 	array_mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, _mesh_arrays)
 
-	_mesh.mesh = array_mesh
+	mesh = array_mesh
 
 
 func _generate_cubes():
@@ -225,11 +223,11 @@ func _generate_cube(
 
 
 func _generate_collision() -> void:
-	if _mesh.get_child_count() >= 1:
-		var collision := _mesh.get_child(0)
+	if get_child_count() >= 1:
+		var collision := get_child(0)
 		collision.free()
 
-	_mesh.create_trimesh_collision()
+	create_trimesh_collision()
 
 
 func remove_block(world_position: Vector3, normal: Vector3) -> void:
