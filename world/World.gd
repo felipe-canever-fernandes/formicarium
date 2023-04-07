@@ -4,7 +4,7 @@ const _RAY_LENGTH: int = 4000
 
 @onready var _fps := $FPS as Label
 @onready var _camera := $Camera as Camera3D
-@onready var _chunk := $Chunk as Chunk
+@onready var _terrain := $Terrain as Terrain
 
 
 func _process(_delta: float) -> void:
@@ -30,5 +30,4 @@ func _handle_digging() -> void:
 	var result := space_state.intersect_ray(parameters)
 
 	if not result.is_empty():
-		_chunk.remove_block(result["position"], result["normal"])
-		pass
+		_terrain.remove_block(result["position"], result["normal"])

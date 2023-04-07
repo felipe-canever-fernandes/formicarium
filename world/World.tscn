@@ -1,15 +1,18 @@
-[gd_scene load_steps=6 format=3 uid="uid://dtp7ckt2v1asq"]
+[gd_scene load_steps=7 format=3 uid="uid://dtp7ckt2v1asq"]
 
 [ext_resource type="Script" path="res://world/Camera.gd" id="1_1y2y1"]
 [ext_resource type="Script" path="res://world/World.gd" id="1_ibgjs"]
 [ext_resource type="PackedScene" uid="uid://gof6m8iw3pph" path="res://ant/Ant.tscn" id="1_k3lf7"]
-[ext_resource type="PackedScene" uid="uid://din64inby56sp" path="res://terrain/chunk/Chunk.tscn" id="2_0hp8a"]
+[ext_resource type="PackedScene" uid="uid://c77x76doi6yy4" path="res://terrain/Terrain.tscn" id="4_ykv4m"]
 
 [sub_resource type="Environment" id="Environment_n4w7s"]
 ambient_light_source = 2
 ambient_light_color = Color(0.690196, 0.690196, 0.690196, 1)
 ssao_enabled = true
 ssao_detail = 5.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_45snu"]
+albedo_color = Color(0.635294, 0.282353, 0, 1)
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_ibgjs")
@@ -35,9 +38,9 @@ shadow_opacity = 0.9
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 39, 8)
 _food_points = 300
 
-[node name="Chunk" parent="." instance=ExtResource("2_0hp8a")]
-_size = Vector3i(50, 50, 50)
-_cube_size = Vector3(1, 1, 1)
+[node name="Terrain" parent="." instance=ExtResource("4_ykv4m")]
+_size_in_chunks = Vector3i(5, 5, 5)
+_material = SubResource("StandardMaterial3D_45snu")
 
 [node name="FPS" type="Label" parent="."]
 offset_right = 40.0
