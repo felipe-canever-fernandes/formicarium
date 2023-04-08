@@ -3,8 +3,8 @@ extends Node3D
 
 const Block := preload("res://terrain/Block.gd")
 
-const _CHUNK_SIZE := Vector3i.ONE * 10
-const _CUBE_SIZE :=  Vector3.ONE
+const _CHUNK_SIZE := Vector3i(3, 3, 3)
+const _CUBE_SIZE :=  Vector3(1, 1, 1)
 
 @export var _size_in_chunks: Vector3i
 @export var _material: StandardMaterial3D
@@ -40,7 +40,7 @@ func _generate_blocks() -> void:
 			for z in _blocks[x][y].size():
 				var block_type: Block.Type
 
-				if y <= 2 * sin(0.25 * x) + 2 * sin(0.1 * z) + 25:
+				if y <= 2 * sin(0.25 * x) + 2 * sin(0.1 * z) + 30:
 					block_type = Block.Type.DIRT
 				else:
 					block_type = Block.Type.AIR
@@ -90,10 +90,21 @@ func remove_block(world_position: Vector3, normal: Vector3) -> void:
 
 	_blocks[block_position.x][block_position.y][block_position.z].type = \
 			Block.Type.AIR
+	var chunk_position := _from_block_position_to_chunk_position(block_position)
 
-	for x in _size_in_chunks.x:
-		for y in _size_in_chunks.y:
-			for z in _size_in_chunks.z:
+	for x in range(chunk_position.x - 1, chunk_position.x + 1 + 1):
+		for y in range(chunk_position.y - 1, chunk_position.y + 1 + 1):
+			for z in range(chunk_position.z - 1, chunk_position.z + 1 + 1):
+				var x_difference: int = abs(chunk_position.x - x)
+				var y_difference: int = abs(chunk_position.y - y)
+				var z_difference: int = abs(chunk_position.z - z)
+
+				if x_difference + y_difference + z_difference > 1:
+					continue
+
+				if not _is_chunk_position_inside_terrain(Vector3i(x, y, z)):
+					continue
+
 				_chunks[x][y][z].generate_terrain()
 
 
@@ -121,3 +132,19 @@ func _from_world_position_to_block_position(world_position: Vector3) -> Vector3i
 		int(world_position.y / _CUBE_SIZE.y),
 		int(world_position.z / _CUBE_SIZE.z),
 	)
+
+
+func _from_block_position_to_chunk_position(
+	block_position: Vector3i,
+) -> Vector3i:
+	@warning_ignore("integer_division")
+	return Vector3i(
+		block_position.x / _CHUNK_SIZE.x,
+		block_position.y / _CHUNK_SIZE.y,
+		block_position.z / _CHUNK_SIZE.z,
+	)
+
+func _is_chunk_position_inside_terrain(chunk_position: Vector3i) -> bool:
+	return chunk_position.x >= 0 and chunk_position.x < _size_in_chunks.x \
+			and chunk_position.y >= 0 and chunk_position.y < _size_in_chunks.y \
+			and chunk_position.z >= 0 and chunk_position.z < _size_in_chunks.z

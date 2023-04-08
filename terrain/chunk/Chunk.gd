@@ -93,11 +93,11 @@ func _ready() -> void:
 
 
 func generate_terrain() -> void:
-	_generate_mesh()
-		_generate_collision()
+	var has_mesh := _generate_mesh()
+	_generate_collision(has_mesh)
 
 
-func _generate_mesh() -> void:
+func _generate_mesh() -> bool:
 	_mesh_arrays[Mesh.ARRAY_VERTEX] = PackedVector3Array()
 	_mesh_arrays[Mesh.ARRAY_NORMAL] = PackedVector3Array()
 	_mesh_arrays[Mesh.ARRAY_INDEX] = PackedInt32Array()
@@ -105,8 +105,11 @@ func _generate_mesh() -> void:
 	_generate_cubes()
 
 	var array_mesh := ArrayMesh.new()
+	var has_mesh := false
 
 	if _mesh_arrays[Mesh.ARRAY_VERTEX].size() > 0:
+		has_mesh = true
+
 		array_mesh.add_surface_from_arrays(
 			Mesh.PRIMITIVE_TRIANGLES,
 			_mesh_arrays,
@@ -114,7 +117,7 @@ func _generate_mesh() -> void:
 
 	mesh = array_mesh
 
-	return true
+	return has_mesh
 
 
 func _generate_cubes():
@@ -203,9 +206,10 @@ func _generate_cube(
 		_mesh_arrays[Mesh.ARRAY_INDEX].append_array(indices)
 
 
-func _generate_collision() -> void:
+func _generate_collision(has_mesh: bool) -> void:
 	if get_child_count() >= 1:
 		var collision := get_child(0)
 		collision.free()
 
-	create_trimesh_collision()
+	if has_mesh:
+		create_trimesh_collision()

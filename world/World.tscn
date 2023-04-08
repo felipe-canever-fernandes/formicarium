@@ -39,7 +39,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 39, 8)
 _food_points = 300
 
 [node name="Terrain" parent="." instance=ExtResource("4_ykv4m")]
-_size_in_chunks = Vector3i(5, 5, 5)
+_size_in_chunks = Vector3i(20, 20, 20)
 _material = SubResource("StandardMaterial3D_45snu")
 
 [node name="FPS" type="Label" parent="."]
