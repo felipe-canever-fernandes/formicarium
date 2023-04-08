@@ -12,11 +12,15 @@ func _process(_delta: float) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	_handle_digging()
+	_handle_block_interaction("place", "add_block")
+	_handle_block_interaction("dig", "remove_block")
 
 
-func _handle_digging() -> void:
-	if not Input.is_action_just_released("dig"):
+func _handle_block_interaction(
+	action: StringName,
+	function_name: StringName,
+) -> void:
+	if not Input.is_action_just_released(action):
 		return
 
 	var mouse_position := get_viewport().get_mouse_position()
@@ -30,4 +34,4 @@ func _handle_digging() -> void:
 	var result := space_state.intersect_ray(parameters)
 
 	if not result.is_empty():
-		_terrain.remove_block(result["position"], result["normal"])
+		_terrain.call(function_name, result["position"], result["normal"])

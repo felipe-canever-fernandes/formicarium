@@ -82,14 +82,37 @@ func _generate_chunk(chunk_position: Vector3i) -> Chunk:
 	return chunk
 
 
+func add_block(world_position: Vector3, normal: Vector3) -> void:
+	_change_block(
+		"_from_cube_position_to_adjacent_block",
+		Block.Type.DIRT,
+		world_position,
+		normal,
+	)
+
+
 func remove_block(world_position: Vector3, normal: Vector3) -> void:
-	var block_position := _from_cube_position_to_block_position(
+	_change_block(
+		"_from_cube_position_to_block_position",
+		Block.Type.AIR,
+		world_position,
+		normal,
+	)
+
+
+func _change_block(
+	block_position_function_name: StringName,
+	block_type: Block.Type,
+	world_position: Vector3,
+	normal: Vector3,
+) -> void:
+	var block_position: Vector3i = call(block_position_function_name,
 		world_position,
 		normal,
 	)
 
 	_blocks[block_position.x][block_position.y][block_position.z].type = \
-			Block.Type.AIR
+			block_type
 	var chunk_position := _from_block_position_to_chunk_position(block_position)
 
 	for x in range(chunk_position.x - 1, chunk_position.x + 1 + 1):
@@ -124,6 +147,27 @@ func _from_cube_position_to_block_position(
 		block_position.z -= 1
 
 	return block_position
+
+
+func _from_cube_position_to_adjacent_block(
+	cube_position: Vector3,
+	normal: Vector3,
+) -> Vector3i:
+	var block_position := _from_cube_position_to_block_position(
+		cube_position,
+		normal,
+	)
+
+	var adjacent_block_position := block_position
+
+	if normal.x != 0:
+		adjacent_block_position.x += int(normal.x)
+	elif normal.y != 0:
+		adjacent_block_position.y += int(normal.y)
+	elif normal.z != 0:
+		adjacent_block_position.z += int(normal.z)
+
+	return adjacent_block_position
 
 
 func _from_world_position_to_block_position(world_position: Vector3) -> Vector3i:
