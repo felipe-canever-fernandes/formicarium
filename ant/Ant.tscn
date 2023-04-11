@@ -1,20 +1,43 @@
-[gd_scene load_steps=4 format=3 uid="uid://gof6m8iw3pph"]
+[gd_scene load_steps=6 format=3 uid="uid://gof6m8iw3pph"]
 
 [ext_resource type="Script" path="res://ant/Ant.gd" id="1_dbcml"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6q4kn"]
-albedo_color = Color(0, 0, 0, 1)
+[ext_resource type="Material" uid="uid://cepw6toee5yyb" path="res://ant/material.tres" id="2_dgi5f"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_6ohjy"]
-material = SubResource("StandardMaterial3D_6q4kn")
-size = Vector3(0.5, 0.5, 0.75)
+material = ExtResource("2_dgi5f")
+size = Vector3(0.25, 0.25, 0.5)
 
-[node name="Ant" type="Node3D"]
+[sub_resource type="BoxMesh" id="BoxMesh_p5rab"]
+material = ExtResource("2_dgi5f")
+size = Vector3(0.02, 0.02, 0.15)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_reb1d"]
+size = Vector3(0.25, 0.25, 0.5)
+
+[node name="Ant" type="CharacterBody3D"]
 script = ExtResource("1_dbcml")
 
-[node name="Model" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+[node name="Model" type="Node3D" parent="."]
+metadata/_edit_group_ = true
+
+[node name="Body" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)
 mesh = SubResource("BoxMesh_6ohjy")
+skeleton = NodePath("../..")
+
+[node name="LeftAntenna" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, -0.075, 0.2, -0.3)
+mesh = SubResource("BoxMesh_p5rab")
+skeleton = NodePath("../..")
+
+[node name="RightAntenna" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 0.707107, -0.707107, 0, 0.707107, 0.707107, 0.075, 0.2, -0.3)
+mesh = SubResource("BoxMesh_p5rab")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.125, 0)
+shape = SubResource("BoxShape3D_reb1d")
 
 [node name="Lifespan" type="Timer" parent="."]
 wait_time = 1800.0

@@ -18,7 +18,7 @@ albedo_color = Color(0.635294, 0.282353, 0, 1)
 script = ExtResource("1_ibgjs")
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(-0.707107, 0.5, -0.5, -2.98023e-08, 0.707107, 0.707107, 0.707107, 0.5, -0.5, 3, 44, 3)
+transform = Transform3D(-0.707107, 0.5, -0.5, -2.98023e-08, 0.707107, 0.707107, 0.707107, 0.5, -0.5, 6, 35.5147, 6)
 current = true
 size = 30.0
 script = ExtResource("1_1y2y1")
@@ -35,8 +35,9 @@ shadow_enabled = true
 shadow_opacity = 0.9
 
 [node name="Ant" parent="." instance=ExtResource("1_k3lf7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 39, 8)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 34, 8)
 _food_points = 300
+_movement_speed = 5.0
 
 [node name="Terrain" parent="." instance=ExtResource("4_ykv4m")]
 _size_in_chunks = Vector3i(20, 20, 20)
