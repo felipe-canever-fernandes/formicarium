@@ -8,19 +8,13 @@ const _CLIMB_ANGLE: float = PI / 2
 const _CLIMB_OFFSET: float = -0.2
 const _DESCENT_OFFSET: float = 0
 
-
 @export var _food_points: int:
-	set(value):
-		_food_points = value
-
-		if _food_points <= 0:
-			_die()
-
+	set = _set_food_points
 
 @export var _movement_speed: float
 
-@onready var _wall_sensor: RayCast3D = $WallSensor
-@onready var _ledge_sensor: RayCast3D = $LedgeSensor
+@onready var _wall_sensor := $WallSensor as RayCast3D
+@onready var _ledge_sensor := $LedgeSensor as RayCast3D
 
 func _physics_process(_delta: float) -> void:
 	_handle_movement()
@@ -37,7 +31,7 @@ func _handle_movement() -> void:
 
 
 func _handle_rotation() -> void:
-	var rotation_direction := 0
+	var rotation_direction: int = 0
 
 	if Input.is_action_just_pressed("rotate_ant_left"):
 		rotation_direction = 1
@@ -80,3 +74,10 @@ func _on_food_points_timer_timeout() -> void:
 
 func _die() -> void:
 	queue_free()
+
+
+func _set_food_points(value: int) -> void:
+		_food_points = value
+
+		if _food_points <= 0:
+			_die()
