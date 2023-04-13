@@ -51,12 +51,10 @@ func _handle_climbing() -> void:
 		surface = _wall_sensor
 		direction = 1
 		offset = _CLIMB_OFFSET
-		print("wall")
 	elif _ledge_sensor.is_colliding():
 		surface = _ledge_sensor
 		direction = -1
 		offset = _DESCENT_OFFSET
-		print("ledge")
 	else:
 		return
 
