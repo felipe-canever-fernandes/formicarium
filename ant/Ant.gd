@@ -67,7 +67,7 @@ func _on_lifespan_timeout() -> void:
 
 
 func _on_food_points_timer_timeout() -> void:
-		_food_points -= 1
+	_food_points -= 1
 
 
 func _die() -> void:
@@ -75,7 +75,7 @@ func _die() -> void:
 
 
 func _set_food_points(value: int) -> void:
-		_food_points = value
+	_food_points = value
 
-		if _food_points <= 0:
-			_die()
+	if _food_points <= 0:
+		_die()
