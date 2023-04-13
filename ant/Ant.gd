@@ -13,8 +13,8 @@ const _DESCENT_OFFSET: float = 0
 
 @export var _movement_speed: float
 
-@onready var _wall_sensor := $WallSensor as RayCast3D
-@onready var _ledge_sensor := $LedgeSensor as RayCast3D
+@onready var _wall_sensor: RayCast3D = $WallSensor as RayCast3D
+@onready var _ledge_sensor: RayCast3D = $LedgeSensor as RayCast3D
 
 func _physics_process(_delta: float) -> void:
 	_handle_movement()
