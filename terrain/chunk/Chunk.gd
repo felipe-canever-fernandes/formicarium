@@ -10,7 +10,7 @@ enum CubeSide {
 	TOP,
 }
 
-const Block: Resource = preload("res://terrain/block.gd")
+const Block := preload("res://terrain/block.gd")
 
 const _TRIANGLE_VERTEX_COUNT: int = 3
 const _CUBE_FACE_TRIANGLE_COUNT: int = 2
