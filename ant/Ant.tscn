@@ -1,6 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://gof6m8iw3pph"]
+[gd_scene load_steps=6 format=3]
 
-[ext_resource type="Script" path="res://ant/Ant.gd" id="1_dbcml"]
+[ext_resource type="Script" path="res://ant/ant.gd" id="1_dbcml"]
 [ext_resource type="Material" uid="uid://cepw6toee5yyb" path="res://ant/material.tres" id="2_dgi5f"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_6ohjy"]

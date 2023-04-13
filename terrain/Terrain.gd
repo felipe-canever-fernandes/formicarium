@@ -1,7 +1,7 @@
 class_name Terrain
 extends Node3D
 
-const Block := preload("res://terrain/Block.gd")
+const Block := preload("res://terrain/block.gd")
 
 const _CHUNK_SIZE := Vector3i(3, 3, 3)
 const _CUBE_SIZE :=  Vector3(1, 1, 1)

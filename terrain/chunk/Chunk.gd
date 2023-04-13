@@ -1,7 +1,7 @@
 class_name Chunk
 extends MeshInstance3D
 
-const Block := preload("res://terrain/Block.gd")
+const Block := preload("res://terrain/block.gd")
 
 const TRIANGLE_VERTEX_COUNT := 3
 const CUBE_FACE_TRIANGLE_COUNT := 2
