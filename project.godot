@@ -15,6 +15,10 @@ run/main_scene="res://world/world.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Cube="*res://terrain/cube.gd"
+
 [display]
 
 window/size/always_on_top=true
