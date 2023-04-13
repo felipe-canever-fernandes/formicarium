@@ -1,13 +1,6 @@
 class_name Chunk
 extends MeshInstance3D
 
-const Block := preload("res://terrain/block.gd")
-
-const TRIANGLE_VERTEX_COUNT := 3
-const CUBE_FACE_TRIANGLE_COUNT := 2
-
-const CUBE_FACE_VERTEX_COUNT := TRIANGLE_VERTEX_COUNT * CUBE_FACE_TRIANGLE_COUNT
-
 enum CubeSide {
 	FRONT,
 	RIGHT,
@@ -17,12 +10,21 @@ enum CubeSide {
 	TOP,
 }
 
+const Block: Resource = preload("res://terrain/block.gd")
+
+const _TRIANGLE_VERTEX_COUNT: int = 3
+const _CUBE_FACE_TRIANGLE_COUNT: int = 2
+
+const _CUBE_FACE_VERTEX_COUNT: int = (
+		_TRIANGLE_VERTEX_COUNT * _CUBE_FACE_TRIANGLE_COUNT
+)
+
 const _CUBE_SIDE_VERTEX_COUNT: int = 4
 
-@export var _size: Vector3i
-@export var _cube_size: Vector3
+@export var _size: Vector3i = Vector3i.ZERO
+@export var _cube_size: Vector3 = Vector3.ZERO
 
-var _cube_sides_vertices := [
+var _cube_sides_vertices: Array[PackedVector3Array] = [
 	PackedVector3Array([
 		Vector3(0, 0, 0),
 		Vector3(1, 0, 0),
@@ -66,12 +68,12 @@ var _cube_sides_vertices := [
 	]),
 ]
 
-var _cube_vertices_indices := [
+var _cube_vertices_indices: Array[int] = [
 	0, 1, 3,
 	1, 2, 3,
 ]
 
-var _cube_sides_normals := [
+var _cube_sides_normals: Array[Vector3] = [
 	Vector3(0, 0, -1),
 	Vector3(1, 0, 0),
 	Vector3(0, 0, 1),
@@ -80,11 +82,11 @@ var _cube_sides_normals := [
 	Vector3(0, 1, 0),
 ]
 
-var _blocks: Array[Array]
-var _blocks_size: Vector3i
-var _blocks_limits: Vector3i
+var _blocks: Array[Array] = []
+var _blocks_size: Vector3i = Vector3i.ZERO
+var _blocks_limits: Vector3i = Vector3i.ZERO
 
-var _mesh_arrays: Array
+var _mesh_arrays: Array = []
 
 
 func _ready() -> void:
@@ -93,7 +95,7 @@ func _ready() -> void:
 
 
 func generate_terrain() -> void:
-	var has_mesh := _generate_mesh()
+	var has_mesh: bool = _generate_mesh()
 	_generate_collision(has_mesh)
 
 
@@ -104,15 +106,15 @@ func _generate_mesh() -> bool:
 
 	_generate_cubes()
 
-	var array_mesh := ArrayMesh.new()
-	var has_mesh := false
+	var array_mesh: ArrayMesh = ArrayMesh.new()
+	var has_mesh: bool = false
 
 	if _mesh_arrays[Mesh.ARRAY_VERTEX].size() > 0:
 		has_mesh = true
 
 		array_mesh.add_surface_from_arrays(
-			Mesh.PRIMITIVE_TRIANGLES,
-			_mesh_arrays,
+				Mesh.PRIMITIVE_TRIANGLES,
+				_mesh_arrays,
 		)
 
 	mesh = array_mesh
@@ -121,16 +123,19 @@ func _generate_mesh() -> bool:
 
 
 func _generate_cubes():
-	for x in range(_blocks_limits.x, _blocks_limits.x + _size.x):
-		for y in range(_blocks_limits.y, _blocks_limits.y + _size.y):
-			for z in range(_blocks_limits.z, _blocks_limits.z + _size.z):
+	var starting_position: Vector3i = _blocks_limits
+	var ending_position: Vector3i = starting_position + _size
+
+	for x in range(starting_position.x, ending_position.x):
+		for y in range(starting_position.y, ending_position.y):
+			for z in range(starting_position.z, ending_position.z):
 				var block: Block.Block = _blocks[x][y][z]
 
 				if block.type == Block.Type.AIR:
 					continue
 
-				var cube_position := Vector3(x, y, z) * _cube_size
-				var sides := _get_cube_visible_sides(x, y, z)
+				var cube_position: Vector3 = Vector3(x, y, z) * _cube_size
+				var sides: Array[CubeSide] = _get_cube_visible_sides(x, y, z)
 
 				if sides.size() <= 0:
 					continue
@@ -169,8 +174,8 @@ func _get_cube_visible_sides(x: int, y: int, z: int) -> Array[CubeSide]:
 
 
 func _generate_cube(
-	cube_position: Vector3,
-	sides: Array[CubeSide],
+		cube_position: Vector3,
+		sides: Array[CubeSide],
 ):
 	assert(_cube_size.x > 0)
 	assert(_cube_size.y > 0)
@@ -178,21 +183,23 @@ func _generate_cube(
 
 	var total_vertex_count: int = _mesh_arrays[Mesh.ARRAY_VERTEX].size()
 
-	var vertices := PackedVector3Array()
+	var vertices: PackedVector3Array = PackedVector3Array()
 	vertices.resize(_CUBE_SIDE_VERTEX_COUNT)
 
-	var normals := PackedVector3Array()
+	var normals: PackedVector3Array = PackedVector3Array()
 	normals.resize(_CUBE_SIDE_VERTEX_COUNT)
 
-	var indices := PackedInt32Array()
-	indices.resize(CUBE_FACE_VERTEX_COUNT)
+	var indices: PackedInt32Array = PackedInt32Array()
+	indices.resize(_CUBE_FACE_VERTEX_COUNT)
 
 	for side_index in sides.size():
-		var side := sides[side_index]
+		var side: CubeSide = sides[side_index]
 
 		for vertex_index in _CUBE_SIDE_VERTEX_COUNT:
-			vertices[vertex_index] = _cube_sides_vertices[side][vertex_index]\
-					* _cube_size + cube_position
+			vertices[vertex_index] = (
+					_cube_sides_vertices[side][vertex_index] * _cube_size
+					+ cube_position
+			)
 
 			normals[vertex_index] = _cube_sides_normals[side]
 
@@ -200,15 +207,18 @@ func _generate_cube(
 		_mesh_arrays[Mesh.ARRAY_NORMAL].append_array(normals)
 
 		for index_index in _cube_vertices_indices.size():
-			indices[index_index] = _cube_vertices_indices[index_index]\
-					+ side_index * _CUBE_SIDE_VERTEX_COUNT + total_vertex_count
+			indices[index_index] = (
+					_cube_vertices_indices[index_index]
+					+ side_index * _CUBE_SIDE_VERTEX_COUNT
+					+ total_vertex_count
+			)
 
 		_mesh_arrays[Mesh.ARRAY_INDEX].append_array(indices)
 
 
 func _generate_collision(has_mesh: bool) -> void:
 	if get_child_count() >= 1:
-		var collision := get_child(0)
+		var collision: Object = get_child(0)
 		collision.free()
 
 	if has_mesh:
