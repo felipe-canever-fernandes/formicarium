@@ -1,12 +1,10 @@
 class_name Chunk
 extends MeshInstance3D
 
-const Block := preload("res://terrain/block.gd")
-
 @export var _size: Vector3i = Vector3i.ZERO
 @export var _cube_size: Vector3 = Vector3.ZERO
 
-var _blocks: Array[Array] = []
+var _blocks: Blocks = null
 var _blocks_size: Vector3i = Vector3i.ZERO
 var _blocks_limits: Vector3i = Vector3i.ZERO
 
@@ -53,7 +51,7 @@ func _generate_cubes():
 	for x in range(starting_position.x, ending_position.x):
 		for y in range(starting_position.y, ending_position.y):
 			for z in range(starting_position.z, ending_position.z):
-				var block: Block.Block = _blocks[x][y][z]
+				var block: Block = _blocks.blocks[x][y][z]
 
 				if block.type == Block.Type.AIR:
 					continue
@@ -71,27 +69,27 @@ func _get_cube_visible_sides(x: int, y: int, z: int) -> Array[Cube.Side]:
 	var sides: Array[Cube.Side] = []
 
 	if x - 1 >= 0:
-		if _blocks[x - 1][y][z].type == Block.Type.AIR:
+		if _blocks.blocks[x - 1][y][z].type == Block.Type.AIR:
 			sides.append(Cube.Side.LEFT)
 
 	if x + 1 < _blocks_size.x:
-		if _blocks[x + 1][y][z].type == Block.Type.AIR:
+		if _blocks.blocks[x + 1][y][z].type == Block.Type.AIR:
 			sides.append(Cube.Side.RIGHT)
 
 	if y - 1 >= 0:
-		if _blocks[x][y - 1][z].type == Block.Type.AIR:
+		if _blocks.blocks[x][y - 1][z].type == Block.Type.AIR:
 			sides.append(Cube.Side.BOTTOM)
 
 	if y + 1 < _blocks_size.y:
-		if _blocks[x][y + 1][z].type == Block.Type.AIR:
+		if _blocks.blocks[x][y + 1][z].type == Block.Type.AIR:
 			sides.append(Cube.Side.TOP)
 
 	if z - 1 >= 0:
-		if _blocks[x][y][z - 1].type == Block.Type.AIR:
+		if _blocks.blocks[x][y][z - 1].type == Block.Type.AIR:
 			sides.append(Cube.Side.FRONT)
 
 	if z + 1 < _blocks_size.z:
-		if _blocks[x][y][z + 1].type == Block.Type.AIR:
+		if _blocks.blocks[x][y][z + 1].type == Block.Type.AIR:
 			sides.append(Cube.Side.BACK)
 
 	return sides

@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=2 format=3 uid="uid://bwmeba6udvot8"]
 
 [ext_resource type="Script" path="res://terrain/terrain.gd" id="1_1fo4y"]
 

@@ -1,15 +1,67 @@
 class_name Terrain
 extends Node3D
 
-const Block := preload("res://terrain/block.gd")
-
 const _CHUNK_SIZE: Vector3i = Vector3i.ONE * 3
 const _CUBE_SIZE: Vector3 = Vector3.ONE
+
+
+static func _from_cube_position_to_block_position(
+		cube_position: Vector3,
+		normal: Vector3,
+) -> Vector3i:
+	var block_position: Vector3i = (
+			Terrain._from_world_position_to_block_position(cube_position)
+	)
+
+	if normal.x > 0:
+		block_position.x -= 1
+
+	if normal.y > 0:
+		block_position.y -= 1
+
+	if normal.z > 0:
+		block_position.z -= 1
+
+	return block_position
+
+
+static func _from_cube_position_to_adjacent_block(
+		cube_position: Vector3,
+		normal: Vector3,
+) -> Vector3i:
+	var block_position: Vector3i = (
+			Terrain._from_cube_position_to_block_position(
+					cube_position,
+					normal,
+			)
+	)
+
+	var adjacent_block_position: Vector3i = block_position
+
+	if normal.x != 0:
+		adjacent_block_position.x += int(normal.x)
+	elif normal.y != 0:
+		adjacent_block_position.y += int(normal.y)
+	elif normal.z != 0:
+		adjacent_block_position.z += int(normal.z)
+
+	return adjacent_block_position
+
+
+static func _from_world_position_to_block_position(
+		world_position: Vector3,
+) -> Vector3i:
+	return Vector3i(
+		int(world_position.x / _CUBE_SIZE.x),
+		int(world_position.y / _CUBE_SIZE.y),
+		int(world_position.z / _CUBE_SIZE.z),
+	)
+
 
 @export var _size_in_chunks: Vector3i = Vector3i.ZERO
 @export var _material: StandardMaterial3D = null
 
-var _blocks: Array[Array] = []
+var _blocks: Blocks = null
 var _chunks: Array[Array] = []
 
 var _size: Vector3i:
@@ -17,31 +69,8 @@ var _size: Vector3i:
 
 
 func _ready() -> void:
-	_generate_blocks()
+	_blocks = Blocks.new(_size)
 	_generate_chunks()
-
-
-func _generate_blocks() -> void:
-	if _size.x <= 0 or _size.y <= 0 or _size.z <= 0:
-		return
-
-	_blocks.resize(_size.x)
-
-	for x in _blocks.size():
-		_blocks[x] = []
-		_blocks[x].resize(_size.y)
-
-		for y in _blocks[x].size():
-			_blocks[x][y] = []
-			_blocks[x][y].resize(_size.z)
-
-			for z in _blocks[x][y].size():
-				var block_type: Block.Type = Block.Type.AIR
-
-				if y <= 2 * sin(0.25 * x) + 2 * sin(0.1 * z) + 30:
-					block_type = Block.Type.DIRT
-
-				_blocks[x][y][z] = Block.Block.new(block_type)
 
 
 func _generate_chunks() -> void:
@@ -107,9 +136,11 @@ func _change_block(
 			normal,
 	)
 
-	_blocks[block_position.x][block_position.y][block_position.z].type = (
-			block_type
+	var block: Block = (
+			_blocks.blocks[block_position.x][block_position.y][block_position.z]
 	)
+
+	block.type = block_type
 
 	var chunk_position: Vector3i = _from_block_position_to_chunk_position(
 			block_position,
@@ -141,57 +172,6 @@ func _change_block(
 					continue
 
 				_chunks[x][y][z].generate_terrain()
-
-
-func _from_cube_position_to_block_position(
-		cube_position: Vector3,
-		normal: Vector3,
-) -> Vector3i:
-	var block_position: Vector3i = _from_world_position_to_block_position(
-			cube_position,
-	)
-
-	if normal.x > 0:
-		block_position.x -= 1
-
-	if normal.y > 0:
-		block_position.y -= 1
-
-	if normal.z > 0:
-		block_position.z -= 1
-
-	return block_position
-
-
-func _from_cube_position_to_adjacent_block(
-		cube_position: Vector3,
-		normal: Vector3,
-) -> Vector3i:
-	var block_position: Vector3i = _from_cube_position_to_block_position(
-			cube_position,
-			normal,
-	)
-
-	var adjacent_block_position: Vector3i = block_position
-
-	if normal.x != 0:
-		adjacent_block_position.x += int(normal.x)
-	elif normal.y != 0:
-		adjacent_block_position.y += int(normal.y)
-	elif normal.z != 0:
-		adjacent_block_position.z += int(normal.z)
-
-	return adjacent_block_position
-
-
-func _from_world_position_to_block_position(
-		world_position: Vector3,
-) -> Vector3i:
-	return Vector3i(
-		int(world_position.x / _CUBE_SIZE.x),
-		int(world_position.y / _CUBE_SIZE.y),
-		int(world_position.z / _CUBE_SIZE.z),
-	)
 
 
 func _from_block_position_to_chunk_position(
