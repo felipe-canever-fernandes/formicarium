@@ -19,10 +19,6 @@ config/icon="res://icon.svg"
 
 Cube="*res://terrain/cube.gd"
 
-[display]
-
-window/size/always_on_top=true
-
 [input]
 
 forward={
