@@ -1,10 +1,11 @@
 enum Type {
+	NONE,
 	AIR,
 	DIRT,
 }
 
 class Block:
-	var type: Type
+	var type: Type = Type.NONE
 
 
 	func _init(initial_type: Type) -> void:
