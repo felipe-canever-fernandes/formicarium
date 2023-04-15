@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://world/camera.gd" id="1_1y2y1"]
 [ext_resource type="Script" path="res://world/world.gd" id="1_ibgjs"]
 [ext_resource type="PackedScene" path="res://ant/ant.tscn" id="1_k3lf7"]
-[ext_resource type="PackedScene" uid="uid://bwmeba6udvot8" path="res://terrain/terrain.tscn" id="4_ykv4m"]
+[ext_resource type="PackedScene" uid="uid://bwmeba6udvot8" path="res://terrain/Terrain.tscn" id="4_ykv4m"]
 
 [sub_resource type="Environment" id="Environment_n4w7s"]
 ambient_light_source = 2

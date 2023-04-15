@@ -67,6 +67,8 @@ var _chunks: Array[Array] = []
 var _size: Vector3i:
 	get = _get_size
 
+@onready var _chunks_node: Node3D = $Chunks
+
 
 func _ready() -> void:
 	_blocks = Blocks.new(_size)
@@ -87,7 +89,7 @@ func _generate_chunks() -> void:
 			for z in _size_in_chunks.z:
 				var chunk: Chunk = _generate_chunk(Vector3i(x, y, z))
 				_chunks[x][y][z] = chunk
-				add_child(chunk)
+				_chunks_node.add_child(chunk)
 
 
 func _generate_chunk(chunk_position: Vector3i) -> Chunk:

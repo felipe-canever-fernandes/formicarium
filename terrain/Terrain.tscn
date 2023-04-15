@@ -4,3 +4,5 @@
 
 [node name="Terrain" type="Node3D"]
 script = ExtResource("1_1fo4y")
+
+[node name="Chunks" type="Node3D" parent="."]
