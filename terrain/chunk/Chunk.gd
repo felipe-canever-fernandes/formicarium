@@ -5,7 +5,6 @@ extends MeshInstance3D
 @export var _cube_size: Vector3 = Vector3.ZERO
 
 var _blocks: Blocks = null
-var _blocks_size: Vector3i = Vector3i.ZERO
 var _blocks_limits: Vector3i = Vector3i.ZERO
 
 var _mesh_arrays: Array = []
@@ -57,42 +56,15 @@ func _generate_cubes():
 					continue
 
 				var cube_position: Vector3 = Vector3(x, y, z) * _cube_size
-				var sides: Array[Cube.Side] = _get_cube_visible_sides(x, y, z)
+
+				var sides: Array[Cube.Side] = _blocks.get_visible_sides(
+						Vector3(x, y, z),
+				)
 
 				if sides.size() <= 0:
 					continue
 
 				_generate_cube(cube_position, sides)
-
-
-func _get_cube_visible_sides(x: int, y: int, z: int) -> Array[Cube.Side]:
-	var sides: Array[Cube.Side] = []
-
-	if x - 1 >= 0:
-		if _blocks.blocks[x - 1][y][z].type == Block.Type.AIR:
-			sides.append(Cube.Side.LEFT)
-
-	if x + 1 < _blocks_size.x:
-		if _blocks.blocks[x + 1][y][z].type == Block.Type.AIR:
-			sides.append(Cube.Side.RIGHT)
-
-	if y - 1 >= 0:
-		if _blocks.blocks[x][y - 1][z].type == Block.Type.AIR:
-			sides.append(Cube.Side.BOTTOM)
-
-	if y + 1 < _blocks_size.y:
-		if _blocks.blocks[x][y + 1][z].type == Block.Type.AIR:
-			sides.append(Cube.Side.TOP)
-
-	if z - 1 >= 0:
-		if _blocks.blocks[x][y][z - 1].type == Block.Type.AIR:
-			sides.append(Cube.Side.FRONT)
-
-	if z + 1 < _blocks_size.z:
-		if _blocks.blocks[x][y][z + 1].type == Block.Type.AIR:
-			sides.append(Cube.Side.BACK)
-
-	return sides
 
 
 func _generate_cube(

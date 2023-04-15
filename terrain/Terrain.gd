@@ -99,7 +99,6 @@ func _generate_chunk(chunk_position: Vector3i) -> Chunk:
 
 	chunk._blocks = _blocks
 	chunk._blocks_limits = blocks_limits
-	chunk._blocks_size = _size
 
 	chunk.material_override = _material
 
