@@ -137,9 +137,7 @@ func _change_block(
 			normal,
 	)
 
-	var block: Block = (
-			_blocks.blocks[block_position.x][block_position.y][block_position.z]
-	)
+	var block: Block = _blocks.get_block_at(block_position)
 
 	block.type = block_type
 

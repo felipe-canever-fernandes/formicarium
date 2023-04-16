@@ -47,24 +47,24 @@ func _generate_cubes():
 	var starting_position: Vector3i = _blocks_limits
 	var ending_position: Vector3i = starting_position + _size
 
-	for x in range(starting_position.x, ending_position.x):
-		for y in range(starting_position.y, ending_position.y):
-			for z in range(starting_position.z, ending_position.z):
-				var block: Block = _blocks.blocks[x][y][z]
+	var operation: Callable = func(
+			block_position: Vector3i,
+			block: Block
+	) -> void:
+		if block.type == Block.Type.AIR:
+			return
 
-				if block.type == Block.Type.AIR:
-					continue
+		var cube_position: Vector3 = Vector3(block_position) * _cube_size
 
-				var cube_position: Vector3 = Vector3(x, y, z) * _cube_size
+		var sides: Array[Cube.Side] = \
+				_blocks.get_visible_sides(block_position)
 
-				var sides: Array[Cube.Side] = _blocks.get_visible_sides(
-						Vector3(x, y, z),
-				)
+		if sides.size() <= 0:
+			return
 
-				if sides.size() <= 0:
-					continue
+		_generate_cube(cube_position, sides)
 
-				_generate_cube(cube_position, sides)
+	_blocks.for_each_block(operation, starting_position, ending_position)
 
 
 func _generate_cube(
