@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://world/camera.gd" id="1_1y2y1"]
 [ext_resource type="Script" path="res://world/world.gd" id="1_ibgjs"]
-[ext_resource type="PackedScene" path="res://ant/ant.tscn" id="1_k3lf7"]
-[ext_resource type="PackedScene" uid="uid://bwmeba6udvot8" path="res://terrain/Terrain.tscn" id="4_ykv4m"]
+[ext_resource type="PackedScene" uid="uid://bwnaxycv73w5w" path="res://ant/ant.tscn" id="1_k3lf7"]
+[ext_resource type="PackedScene" uid="uid://bwmeba6udvot8" path="res://terrain/terrain.tscn" id="4_ykv4m"]
 
 [sub_resource type="Environment" id="Environment_n4w7s"]
 ambient_light_source = 2
@@ -35,12 +35,12 @@ shadow_enabled = true
 shadow_opacity = 0.9
 
 [node name="Ant" parent="." instance=ExtResource("1_k3lf7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 30, 8)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 19.5, 30, 8.5)
 _food_points = 300
 _movement_speed = 2.0
 
 [node name="Terrain" parent="." instance=ExtResource("4_ykv4m")]
-_size_in_chunks = Vector3i(20, 20, 20)
+_size_in_chunks = Vector3i(10, 20, 10)
 _material = SubResource("StandardMaterial3D_45snu")
 
 [node name="FPS" type="Label" parent="."]

@@ -199,3 +199,7 @@ func _is_chunk_position_inside_terrain(chunk_position: Vector3i) -> bool:
 
 func _get_size() -> Vector3i:
 	return _size_in_chunks * _CHUNK_SIZE
+
+
+func get_path_from_to(from: Vector3, to: Vector3) -> PackedVector3Array:
+	return _pathfinder.get_path_from_to(from, to)
