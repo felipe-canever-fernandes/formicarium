@@ -62,6 +62,7 @@ static func _from_world_position_to_block_position(
 @export var _material: StandardMaterial3D = null
 
 var _blocks: Blocks = null
+var _pathfinder: Pathfinder = null
 var _chunks: Array[Array] = []
 
 var _size: Vector3i:
@@ -72,7 +73,12 @@ var _size: Vector3i:
 
 func _ready() -> void:
 	_blocks = Blocks.new(_size)
+	generate_paths()
 	_generate_chunks()
+
+
+func generate_paths() -> void:
+	_pathfinder = Pathfinder.new(_blocks)
 
 
 func _generate_chunks() -> void:
