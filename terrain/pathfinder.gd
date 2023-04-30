@@ -25,8 +25,6 @@ func _init(blocks: Blocks) -> void:
 	_generate_paths()
 
 func _generate_paths() -> void:
-	var closure_variables: Dictionary = {"i": 0}
-
 	_blocks.for_each_block(func(block_position: Vector3i, block: Block) -> void:
 		if block.type == Block.Type.AIR:
 			return
@@ -38,18 +36,20 @@ func _generate_paths() -> void:
 			var side_position: Vector3 = \
 					cube_position + Cube.sides_position_offsets[side]
 
-			_a_star.add_point(closure_variables["i"], side_position)
+			var id: int = hash(side_position)
+			_a_star.add_point(id, side_position)
 
 			_side_informations[side_position] = SideInformation.new(
 					block_position,
 					side,
 			)
 
-			for id in _a_star.get_point_ids():
-				if id == closure_variables["i"]:
+			for other_id in _a_star.get_point_ids():
+				if other_id == id:
 					continue
 
-				var other_position: Vector3 = _a_star.get_point_position(id)
+				var other_position: Vector3 = \
+						_a_star.get_point_position(other_id)
 
 				var other_side_information: SideInformation = \
 						_side_informations[other_position]
@@ -83,9 +83,7 @@ func _generate_paths() -> void:
 					if obstacle.type != Block.Type.AIR:
 						continue
 
-				_a_star.connect_points(closure_variables["i"], id)
-
-			closure_variables["i"] += 1
+				_a_star.connect_points(id, other_id)
 	)
 
 
