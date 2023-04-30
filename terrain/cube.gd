@@ -75,3 +75,12 @@ var sides_normals: Array[Vector3] = [
 	Vector3(0, -1, 0),
 	Vector3(0, 1, 0),
 ]
+
+var sides_position_offsets: Array[Vector3] = [
+	Vector3(0.5, 0.5, 0.0),
+	Vector3(1.0, 0.5, 0.5),
+	Vector3(0.5, 0.5, 1.0),
+	Vector3(0.0, 0.5, 0.5),
+	Vector3(0.5, 0.0, 0.5),
+	Vector3(0.5, 1.0, 0.5),
+]
