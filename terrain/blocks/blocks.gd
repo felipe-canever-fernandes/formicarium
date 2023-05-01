@@ -53,8 +53,11 @@ func get_block_at(position: Vector3i) -> Block:
 func for_each_block(
 		operation: Callable,
 		starting_position: Vector3i = Vector3.ZERO,
-		ending_position: Vector3i = _size,
+		ending_position: Vector3i = self.get_size(),
 ) -> void:
+	starting_position = starting_position.clamp(Vector3.ZERO, self.get_size())
+	ending_position = ending_position.clamp(Vector3.ZERO, self.get_size())
+
 	for x in range(starting_position.x, ending_position.x):
 		for y in range(starting_position.y, ending_position.y):
 			for z in range(starting_position.z, ending_position.z):
