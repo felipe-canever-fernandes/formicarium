@@ -25,6 +25,32 @@ func _init(blocks: Blocks) -> void:
 	_generate_paths()
 
 func _generate_paths() -> void:
+	var starting_position: Vector3i = Vector3i.ZERO
+	var ending_position: Vector3i = _blocks.get_size()
+
+	_generate_paths_between(starting_position, ending_position)
+
+
+func update_block(changed_block_position: Vector3i) -> void:
+	var starting_position: Vector3i = changed_block_position - Vector3i.ONE
+	var ending_position: Vector3i = changed_block_position + Vector3i.ONE * 2
+
+	_clear_paths_between(starting_position, ending_position)
+	_generate_paths_between(starting_position, ending_position)
+
+
+
+func get_path_from_to(from: Vector3, to: Vector3) -> PackedVector3Array:
+	var from_id: int = _a_star.get_closest_point(from)
+	var to_id: int = _a_star.get_closest_point(to)
+
+	return _a_star.get_point_path(from_id, to_id)
+
+
+func _generate_paths_between(
+	starting_block_position: Vector3i,
+	ending_block_position: Vector3i,
+) -> void:
 	_blocks.for_each_block(func(block_position: Vector3i, block: Block) -> void:
 		if block.type == Block.Type.AIR:
 			return
@@ -83,12 +109,48 @@ func _generate_paths() -> void:
 					if obstacle.type != Block.Type.AIR:
 						continue
 
-				_a_star.connect_points(id, other_id)
+				_a_star.connect_points(id, other_id),
+
+		starting_block_position,
+		ending_block_position,
 	)
 
 
-func get_path_from_to(from: Vector3, to: Vector3) -> PackedVector3Array:
-	var from_id: int = _a_star.get_closest_point(from)
-	var to_id: int = _a_star.get_closest_point(to)
+func _clear_paths_between(
+	starting_block_position: Vector3i,
+	ending_block_position: Vector3i,
+) -> void:
+	_blocks.for_each_block(func(
+			block_position: Vector3i,
+			_block: Block,
+	) -> void:
+		var cube_position: Vector3 = block_position
 
-	return _a_star.get_point_path(from_id, to_id)
+		for side in [
+			Cube.Side.FRONT,
+			Cube.Side.RIGHT,
+			Cube.Side.BACK,
+			Cube.Side.LEFT,
+			Cube.Side.BOTTOM,
+			Cube.Side.TOP,
+		]:
+			var side_position: Vector3 = \
+					cube_position + Cube.sides_position_offsets[side]
+
+			if not _side_informations.has(side_position):
+				continue
+
+			var side_information: SideInformation = \
+					_side_informations[side_position]
+
+			if side_information.block_position != block_position:
+				continue
+
+			var id: int = hash(side_position)
+			_a_star.remove_point(id)
+
+			_side_informations.erase(side_position),
+
+		starting_block_position,
+		ending_block_position,
+	)

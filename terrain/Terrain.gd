@@ -73,11 +73,11 @@ var _size: Vector3i:
 
 func _ready() -> void:
 	_blocks = Blocks.new(_size)
-	generate_paths()
+	_generate_paths()
 	_generate_chunks()
 
 
-func generate_paths() -> void:
+func _generate_paths() -> void:
 	_pathfinder = Pathfinder.new(_blocks)
 
 
@@ -144,7 +144,6 @@ func _change_block(
 	)
 
 	var block: Block = _blocks.get_block_at(block_position)
-
 	block.type = block_type
 
 	var chunk_position: Vector3i = _from_block_position_to_chunk_position(
@@ -177,6 +176,8 @@ func _change_block(
 					continue
 
 				_chunks[x][y][z].generate_terrain()
+
+	_pathfinder.update_block(block_position)
 
 
 func _from_block_position_to_chunk_position(
