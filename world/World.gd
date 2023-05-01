@@ -16,7 +16,6 @@ func _physics_process(_delta: float) -> void:
 	_handle_block_interaction("place", "add_block")
 	_handle_block_interaction("dig", "remove_block")
 	_handle_ant_movement()
-	_handle_generating_paths()
 
 
 func _handle_block_interaction(
@@ -69,8 +68,3 @@ func _get_mouse_position_in_world() -> Dictionary:
 
 	var result: Dictionary = space_state.intersect_ray(parameters)
 	return result
-
-
-func _handle_generating_paths() -> void:
-	if Input.is_action_just_pressed("generate_paths"):
-		_terrain.generate_paths()
