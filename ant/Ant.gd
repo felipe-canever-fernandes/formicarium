@@ -138,7 +138,9 @@ func _set_food_points(value: int) -> void:
 func set_target_path(value: PackedVector3Array) -> void:
 	_target_path_index = 0
 	target_path = value
-	self._target_position = target_path[_target_path_index]
+
+	if target_path.size() > 0:
+		self._target_position = target_path[_target_path_index]
 
 
 func _set_target_position(value: Vector3) -> void:
