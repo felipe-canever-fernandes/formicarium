@@ -199,3 +199,7 @@ func _get_size() -> Vector3i:
 
 func get_path_from_to(from: Vector3, to: Vector3) -> PackedVector3Array:
 	return _pathfinder.get_path_from_to(from, to)
+
+
+func get_closest_position_to(world_position: Vector3) -> Vector3:
+	return _pathfinder.get_closest_position_to(world_position)

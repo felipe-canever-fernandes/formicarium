@@ -40,7 +40,7 @@ _food_points = 300
 _movement_speed = 2.0
 
 [node name="Terrain" parent="." instance=ExtResource("4_ykv4m")]
-_size_in_chunks = Vector3i(20, 20, 20)
+_size_in_chunks = Vector3i(10, 10, 10)
 _material = SubResource("StandardMaterial3D_45snu")
 
 [node name="FPS" type="Label" parent="."]

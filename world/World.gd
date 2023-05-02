@@ -8,6 +8,13 @@ const _RAY_LENGTH: int = 4000
 @onready var _ant: Ant = $Ant as Ant
 
 
+func _ready() -> void:
+	var ant_position: Vector3 = \
+			_terrain.get_closest_position_to(_ant.position)
+
+	_ant.position = ant_position
+
+
 func _process(_delta: float) -> void:
 	_fps.text = str(Engine.get_frames_per_second())
 

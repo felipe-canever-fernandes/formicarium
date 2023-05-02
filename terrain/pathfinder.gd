@@ -46,6 +46,11 @@ func get_path_from_to(from: Vector3, to: Vector3) -> PackedVector3Array:
 	return _a_star.get_point_path(from_id, to_id)
 
 
+func get_closest_position_to(world_position: Vector3) -> Vector3:
+	var point: int = _a_star.get_closest_point(world_position)
+	return _a_star.get_point_position(point)
+
+
 func _generate_paths_between(
 	starting_block_position: Vector3i,
 	ending_block_position: Vector3i,

@@ -29,7 +29,7 @@ func _generate_blocks() -> void:
 			for z in _blocks[x][y].size():
 				var block_type: Block.Type = Block.Type.AIR
 
-				if y <= 2 * sin(0.25 * x) + 2 * sin(0.1 * z) + 30:
+				if y <= 2 * sin(0.25 * x) + 2 * sin(0.1 * z) + 15:
 					block_type = Block.Type.DIRT
 
 				_blocks[x][y][z] = Block.new(block_type)
