@@ -2,7 +2,7 @@ class_name Chunk
 extends MeshInstance3D
 
 @export var _size: Vector3i = Vector3i.ZERO
-@export var _cube_size: Vector3 = Vector3.ZERO
+@export var _cube_size: float = 0
 
 var _blocks: Blocks = null
 var _blocks_limits: Vector3i = Vector3i.ZERO
@@ -12,7 +12,7 @@ var _mesh_arrays: Array = []
 
 func _init(
 	size: Vector3i,
-	cube_size: Vector3,
+	cube_size: float,
 	blocks: Blocks,
 	blocks_limits: Vector3i,
 	material: Material,
@@ -86,10 +86,6 @@ func _generate_cube(
 		cube_position: Vector3,
 		sides: Array[Cube.Side],
 ):
-	assert(_cube_size.x > 0)
-	assert(_cube_size.y > 0)
-	assert(_cube_size.z > 0)
-
 	var total_vertex_count: int = _mesh_arrays[Mesh.ARRAY_VERTEX].size()
 
 	var vertices: PackedVector3Array = PackedVector3Array()

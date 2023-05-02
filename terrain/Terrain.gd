@@ -2,7 +2,7 @@ class_name Terrain
 extends Node3D
 
 const _CHUNK_SIZE: Vector3i = Vector3i.ONE * 3
-const _CUBE_SIZE: Vector3 = Vector3.ONE
+const _CUBE_SIZE: float = 1
 
 
 static func _from_cube_position_to_block_position(
@@ -51,11 +51,7 @@ static func _from_cube_position_to_adjacent_block(
 static func _from_world_position_to_block_position(
 		world_position: Vector3,
 ) -> Vector3i:
-	return Vector3i(
-		int(world_position.x / _CUBE_SIZE.x),
-		int(world_position.y / _CUBE_SIZE.y),
-		int(world_position.z / _CUBE_SIZE.z),
-	)
+	return world_position / _CUBE_SIZE
 
 
 @export var _size_in_chunks: Vector3i = Vector3i.ZERO
