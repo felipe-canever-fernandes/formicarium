@@ -4,5 +4,6 @@
 
 [node name="Terrain" type="Node3D"]
 script = ExtResource("1_1fo4y")
+_size_in_chunks = null
 
 [node name="Chunks" type="Node3D" parent="."]
