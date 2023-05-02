@@ -99,16 +99,15 @@ func _generate_chunks() -> void:
 
 
 func _generate_chunk(chunk_position: Vector3i) -> Chunk:
-	var chunk: Chunk = Chunk.new()
-	chunk._size = _CHUNK_SIZE
-	chunk._cube_size = _CUBE_SIZE
-
 	var blocks_limits: Vector3i = chunk_position * _CHUNK_SIZE
 
-	chunk._blocks = _blocks
-	chunk._blocks_limits = blocks_limits
-
-	chunk.material_override = _material
+	var chunk: Chunk = Chunk.new(
+		_CHUNK_SIZE,
+		_CUBE_SIZE,
+		_blocks,
+		blocks_limits,
+		_material,
+	)
 
 	return chunk
 

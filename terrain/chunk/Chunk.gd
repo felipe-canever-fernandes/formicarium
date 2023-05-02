@@ -10,8 +10,23 @@ var _blocks_limits: Vector3i = Vector3i.ZERO
 var _mesh_arrays: Array = []
 
 
-func _ready() -> void:
+func _init(
+	size: Vector3i,
+	cube_size: Vector3,
+	blocks: Blocks,
+	blocks_limits: Vector3i,
+	material: Material,
+) -> void:
+	_size = size
+	_cube_size = cube_size
+	_blocks = blocks
+	_blocks_limits = blocks_limits
+	material_override = material
+
 	_mesh_arrays.resize(Mesh.ARRAY_MAX)
+
+
+func _ready() -> void:
 	generate_terrain()
 
 
