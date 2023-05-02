@@ -74,7 +74,7 @@ func _ready() -> void:
 
 
 func _generate_paths() -> void:
-	_pathfinder = Pathfinder.new(_blocks)
+	_pathfinder = Pathfinder.new(_blocks, _CUBE_SIZE)
 
 
 func _generate_chunks() -> void:

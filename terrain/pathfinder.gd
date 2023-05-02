@@ -15,13 +15,17 @@ class SideInformation:
 		side = initial_side
 
 
-var _a_star: AStar3D = AStar3D.new()
 var _blocks: Blocks = null
+var _cube_size: float = 0
+
+var _a_star: AStar3D = AStar3D.new()
 var _side_informations: Dictionary = {}
 
 
-func _init(blocks: Blocks) -> void:
+func _init(blocks: Blocks, cube_size: float) -> void:
 	_blocks = blocks
+	_cube_size = cube_size
+
 	_generate_paths()
 
 func _generate_paths() -> void:
@@ -59,7 +63,7 @@ func _generate_paths_between(
 		if block.type == Block.Type.AIR:
 			return
 
-		var cube_position: Vector3 = block_position
+		var cube_position: Vector3 = block_position * _cube_size
 		var sides: Array[Cube.Side] = _blocks.get_visible_sides(block_position)
 
 		var chunk_starting_position: Vector3i = \
@@ -76,7 +80,8 @@ func _generate_paths_between(
 
 		for side in sides:
 			var side_position: Vector3 = \
-					cube_position + Cube.sides_position_offsets[side]
+					cube_position \
+					+ Cube.sides_position_offsets[side] * _cube_size
 
 			var id: int = hash(side_position)
 			_a_star.add_point(id, side_position)
@@ -102,7 +107,8 @@ func _generate_paths_between(
 						var other_block_position: Vector3i = \
 								Vector3i(x, y, z)
 
-						var other_cube_position: Vector3 = other_block_position
+						var other_cube_position: Vector3 = \
+								other_block_position * _cube_size
 
 						var other_cube_sides: Array[Cube.Side] = \
 								_blocks.get_visible_sides(other_block_position)
@@ -110,7 +116,8 @@ func _generate_paths_between(
 						for other_side in other_cube_sides:
 							var other_side_position: Vector3 = \
 									other_cube_position \
-									+ Cube.sides_position_offsets[other_side]
+									+ Cube.sides_position_offsets[other_side] \
+									* _cube_size
 
 							var other_id: int = hash(other_side_position)
 
@@ -124,10 +131,10 @@ func _generate_paths_between(
 									side_position.\
 									distance_to(other_side_position)
 
-							if distance > 1:
+							if distance > _cube_size:
 								continue
 
-							if is_zero_approx(abs(distance - 1)):
+							if is_zero_approx(abs(distance - _cube_size)):
 								if side != other_side:
 									continue
 
@@ -164,7 +171,7 @@ func _clear_paths_between(
 			block_position: Vector3i,
 			_block: Block,
 	) -> void:
-		var cube_position: Vector3 = block_position
+		var cube_position: Vector3 = block_position * _cube_size
 
 		for side in [
 			Cube.Side.FRONT,
@@ -175,7 +182,8 @@ func _clear_paths_between(
 			Cube.Side.TOP,
 		]:
 			var side_position: Vector3 = \
-					cube_position + Cube.sides_position_offsets[side]
+					cube_position + \
+					Cube.sides_position_offsets[side] * _cube_size
 
 			if not _side_informations.has(side_position):
 				continue
