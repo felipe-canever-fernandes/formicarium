@@ -39,7 +39,6 @@ func update_block(changed_block_position: Vector3i) -> void:
 	_generate_paths_between(starting_position, ending_position)
 
 
-
 func get_path_from_to(from: Vector3, to: Vector3) -> PackedVector3Array:
 	var from_id: int = _a_star.get_closest_point(from)
 	var to_id: int = _a_star.get_closest_point(to)
@@ -58,6 +57,18 @@ func _generate_paths_between(
 		var cube_position: Vector3 = block_position
 		var sides: Array[Cube.Side] = _blocks.get_visible_sides(block_position)
 
+		var chunk_starting_position: Vector3i = \
+				block_position - Vector3i.ONE
+
+		var chunk_ending_position: Vector3i = \
+				block_position + Vector3i.ONE * 2
+
+		chunk_starting_position = \
+				chunk_starting_position.clamp(Vector3.ZERO, _blocks.get_size())
+
+		chunk_ending_position = \
+				chunk_ending_position.clamp(Vector3.ZERO, _blocks.get_size())
+
 		for side in sides:
 			var side_position: Vector3 = \
 					cube_position + Cube.sides_position_offsets[side]
@@ -70,46 +81,70 @@ func _generate_paths_between(
 					side,
 			)
 
-			for other_id in _a_star.get_point_ids():
-				if other_id == id:
-					continue
+			for x in range(
+					chunk_starting_position.x,
+					chunk_ending_position.x,
+			):
+				for y in range(
+						chunk_starting_position.y,
+						chunk_ending_position.y,
+				):
+					for z in range(
+							chunk_starting_position.z,
+							chunk_ending_position.z,
+					):
 
-				var other_position: Vector3 = \
-						_a_star.get_point_position(other_id)
+						var other_block_position: Vector3i = \
+								Vector3i(x, y, z)
 
-				var other_side_information: SideInformation = \
-						_side_informations[other_position]
+						var other_cube_position: Vector3 = other_block_position
 
-				var distance: float = side_position.distance_to(other_position)
+						var other_cube_sides: Array[Cube.Side] = \
+								_blocks.get_visible_sides(other_block_position)
 
-				if distance > 1:
-					continue
+						for other_side in other_cube_sides:
+							var other_side_position: Vector3 = \
+									other_cube_position \
+									+ Cube.sides_position_offsets[other_side]
 
-				var other_side: Cube.Side = other_side_information.side
+							var other_id: int = hash(other_side_position)
 
-				if is_zero_approx(abs(distance - 1)):
-					if side != other_side:
-						continue
+							if other_id == id:
+								continue
 
-				var other_block_position: Vector3i = \
-						other_side_information.block_position
+							if not _a_star.has_point(other_id):
+								continue
 
-				if block_position == other_block_position:
-					var normal: Vector3 = Cube.sides_normals[side]
-					var other_normal: Vector3 = Cube.sides_normals[other_side]
+							var distance: float = \
+									side_position.\
+									distance_to(other_side_position)
 
-					var obstacle_direction: Vector3i = normal + other_normal
+							if distance > 1:
+								continue
 
-					var obstacle_position: Vector3i = \
-							block_position + obstacle_direction
+							if is_zero_approx(abs(distance - 1)):
+								if side != other_side:
+									continue
 
-					var obstacle: Block = \
-							_blocks.get_block_at(obstacle_position)
+							if block_position == other_block_position:
+								var normal: Vector3 = Cube.sides_normals[side]
 
-					if obstacle.type != Block.Type.AIR:
-						continue
+								var other_normal: Vector3 = \
+										Cube.sides_normals[other_side]
 
-				_a_star.connect_points(id, other_id),
+								var obstacle_direction: Vector3i = \
+										normal + other_normal
+
+								var obstacle_position: Vector3i = \
+										block_position + obstacle_direction
+
+								var obstacle: Block = \
+										_blocks.get_block_at(obstacle_position)
+
+								if obstacle.type != Block.Type.AIR:
+									continue
+
+							_a_star.connect_points(id, other_id),
 
 		starting_block_position,
 		ending_block_position,
