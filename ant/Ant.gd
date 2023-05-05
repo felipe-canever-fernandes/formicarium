@@ -7,7 +7,7 @@ enum State {
 	ROTATING,
 }
 
-const _MINIMUM_TARGET_DISTANCE: float = 0.05
+const _MINIMUM_UNIT_TARGET_DISTANCE: float = 0.02
 const _MINIMUM_TARGET_ANGLE: float = 0.05
 
 const _MINIMUM_ROTATION_ANGLE: float = PI / 2
@@ -22,7 +22,9 @@ const _DESCENT_OFFSET: float = 0
 @export var _food_points: int:
 	set = _set_food_points
 
-@export var _movement_speed: float = 0
+@export_range(0, 25) var _movement_speed: float = 0
+
+var _minimum_target_distance: float = 0
 
 var target_path: PackedVector3Array = []:
 	set = set_target_path
@@ -46,6 +48,10 @@ var _direction_projection_on_basis: Vector3 = Vector3.ZERO
 @onready var _ledge_sensor: RayCast3D = $LedgeSensor as RayCast3D
 
 
+func _ready() -> void:
+	_minimum_target_distance = _MINIMUM_UNIT_TARGET_DISTANCE * _movement_speed
+
+
 func _physics_process(_delta: float) -> void:
 	match _state:
 		State.MOVING:
@@ -56,7 +62,7 @@ func _physics_process(_delta: float) -> void:
 
 
 func _move() -> void:
-	if position.distance_to(self._target_position) <= _MINIMUM_TARGET_DISTANCE:
+	if position.distance_to(self._target_position) <= _minimum_target_distance:
 		position = self._target_position
 
 		if _target_path_index + 1 == target_path.size():

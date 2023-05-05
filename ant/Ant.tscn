@@ -57,7 +57,7 @@ target_position = Vector3(0, 0, -0.3)
 
 [node name="LedgeSensor" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, -0.3)
-target_position = Vector3(0, 0, 0.1)
+target_position = Vector3(0, 0, 0.55)
 
 [node name="Lifespan" type="Timer" parent="."]
 wait_time = 1800.0
