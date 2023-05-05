@@ -20,25 +20,7 @@ func _process(_delta: float) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	_handle_block_interaction("place", "add_block")
 	_handle_ant_movement()
-
-
-func _handle_block_interaction(
-	action: StringName,
-	function_name: StringName,
-) -> void:
-	if not Input.is_action_just_released(action):
-		return
-
-	var result: Dictionary = _get_mouse_position_in_world()
-
-	if result.is_empty():
-		return
-
-	var world_position: Vector3 = result["position"]
-	var normal: Vector3 = result["normal"]
-	_terrain.call(function_name, world_position, normal)
 
 
 func _handle_ant_movement():
