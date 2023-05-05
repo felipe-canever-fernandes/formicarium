@@ -19,23 +19,6 @@ func _process(_delta: float) -> void:
 	_fps.text = str(Engine.get_frames_per_second())
 
 
-func _physics_process(_delta: float) -> void:
-	_handle_ant_movement()
-
-
-func _handle_ant_movement():
-	if not Input.is_action_just_released("move_ant"):
-		return
-
-	var result: Dictionary = _get_mouse_position_in_world()
-
-	if result.is_empty():
-		return
-
-	var world_position: Vector3 = result["position"]
-	_ant.target_path = _terrain.get_path_from_to(_ant.position, world_position)
-
-
 func _get_mouse_position_in_world() -> Dictionary:
 	var mouse_position: Vector2 = get_viewport().get_mouse_position()
 
