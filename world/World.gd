@@ -25,12 +25,21 @@ func _handle_selection() -> void:
 		return
 
 	var result: Dictionary = _get_mouse_position_in_world()
-	var collider: PhysicsBody3D = result["collider"]
 
-	if not collider is Ant:
+	if result.is_empty():
 		return
 
-	_ant.selected = not _ant.selected
+	var collider: PhysicsBody3D = result["collider"]
+
+	if collider is Ant:
+		_ant.selected = not _ant.selected
+		return
+
+	if not _ant.selected:
+		return
+
+	var target_position: Vector3 = result["position"]
+	_ant.target_path = _terrain.get_path_from_to(_ant.position, target_position)
 
 
 func _get_mouse_position_in_world() -> Dictionary:
