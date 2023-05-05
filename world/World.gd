@@ -21,7 +21,6 @@ func _process(_delta: float) -> void:
 
 func _physics_process(_delta: float) -> void:
 	_handle_block_interaction("place", "add_block")
-	_handle_block_interaction("dig", "remove_block")
 	_handle_ant_movement()
 
 
