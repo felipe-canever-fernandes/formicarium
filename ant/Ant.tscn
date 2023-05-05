@@ -1,7 +1,12 @@
-[gd_scene load_steps=6 format=3 uid="uid://bwnaxycv73w5w"]
+[gd_scene load_steps=7 format=3 uid="uid://bwnaxycv73w5w"]
 
 [ext_resource type="Script" path="res://ant/ant.gd" id="1_dbcml"]
 [ext_resource type="Material" uid="uid://cepw6toee5yyb" path="res://ant/material.tres" id="2_dgi5f"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ihvma"]
+top_radius = 0.05
+bottom_radius = 0.0
+height = 0.1
 
 [sub_resource type="BoxMesh" id="BoxMesh_6ohjy"]
 material = ExtResource("2_dgi5f")
@@ -16,6 +21,14 @@ size = Vector3(0.25, 0.25, 0.5)
 
 [node name="Ant" type="CharacterBody3D"]
 script = ExtResource("1_dbcml")
+
+[node name="SelectionMarker" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+visible = false
+layers = 2
+cast_shadow = 0
+mesh = SubResource("CylinderMesh_ihvma")
+skeleton = NodePath("../Model")
 
 [node name="Model" type="Node3D" parent="."]
 metadata/_edit_group_ = true

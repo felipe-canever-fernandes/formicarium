@@ -31,6 +31,7 @@ environment = SubResource("Environment_n4w7s")
 [node name="Sun" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.5109, -0.725508, 0.461107, -0.26833, 0.644185, 0.716257, -0.816688, 0.242207, -0.52379, 0, 0, 0)
 light_energy = 2.0
+light_cull_mask = 4293918721
 shadow_enabled = true
 shadow_opacity = 0.9
 

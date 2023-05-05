@@ -7,8 +7,6 @@ const _RAY_LENGTH: int = 4000
 @onready var _terrain: Terrain = $Terrain as Terrain
 @onready var _ant: Ant = $Ant as Ant
 
-var _is_ant_selected: bool = false
-
 
 func _ready() -> void:
 	var ant_position: Vector3 = \
@@ -32,7 +30,7 @@ func _handle_selection() -> void:
 	if not collider is Ant:
 		return
 
-	_is_ant_selected = not _is_ant_selected
+	_ant.selected = not _ant.selected
 
 
 func _get_mouse_position_in_world() -> Dictionary:

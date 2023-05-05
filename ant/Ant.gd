@@ -30,10 +30,17 @@ var target_path: PackedVector3Array = []:
 var _target_position: Vector3 = Vector3.ZERO:
 	set = _set_target_position
 
+var selected: bool = false:
+	set = set_selected,
+	get = get_selected
+
 var _state: State = State.IDLE
 var _target_path_index: int = 0
 
 var _direction_projection_on_basis: Vector3 = Vector3.ZERO
+
+@onready var _selection_marker: MeshInstance3D = $SelectionMarker \
+		as MeshInstance3D
 
 @onready var _wall_sensor: RayCast3D = $WallSensor as RayCast3D
 @onready var _ledge_sensor: RayCast3D = $LedgeSensor as RayCast3D
@@ -146,3 +153,12 @@ func set_target_path(value: PackedVector3Array) -> void:
 func _set_target_position(value: Vector3) -> void:
 	_target_position = value
 	_state = State.MOVING
+
+
+func get_selected() -> bool:
+	return selected
+
+
+func set_selected(value: bool) -> void:
+	selected = value
+	_selection_marker.visible = value
